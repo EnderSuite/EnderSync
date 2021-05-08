@@ -21,7 +21,7 @@
 [stars-shield]: https://img.shields.io/github/stars/EnderSuite/EnderSync?style=flat-square
 [stars-url]: https://github.com/EnderSuite/EnderSync/stargazers
 [issues-shield]: https://img.shields.io/github/issues/EnderSuite/EnderSync?style=flat-square
-[issues-url]: https://github.com/EnderSuite/EnderSyncp/issues
+[issues-url]: https://github.com/EnderSuite/EnderSync/issues
 [license-shield]: https://img.shields.io/github/license/EnderSuite/EnderSync?style=flat-square
 [license-url]: https://github.com/EnderSuite/EnderSync/blob/master/LICENSE
 
