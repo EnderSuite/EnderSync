@@ -52,8 +52,6 @@
 - [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
     - [Features](#features)
-- [Usage](#usage)
-- [Benchmark](#benchmark)
 - [Contributing](#contributing)
 - [Contact](#contact)
 
