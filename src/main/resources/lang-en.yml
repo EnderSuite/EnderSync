@@ -1,0 +1,8 @@
+core:
+  plugin-enable-start: "{prefix} Starting plugin"
+  plugin-enable-success: "{prefix} Plugin started successfully!"
+  plugin-disable-start: "{prefix} Disabling plugin"
+  plugin-disable-success: "{prefix} Plugin was successfully disabled!"
+
+debug:
+  lang-test: "{prefix} This should be readable in the configured language :)"

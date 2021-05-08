@@ -1,0 +1,22 @@
+core:
+  # The minimum log output level.
+  # Possible values: trace, debug, info, warn, error, fatal
+  log-level: "trace"
+
+  # The language file to use.
+  # Possible values: en
+  lang: "en"
+
+
+
+persistance:
+  # The address of the database server.
+  host: "127.0.0.1"
+  # The port of the database server.
+  port: 3306
+  # The username to authenticate with.
+  user: "enderSyncUser"
+  # The database password to authenticate with.
+  password: "ChangeMe!!"
+  # The database name. !! You need to create the database manually !!
+  database: "endersuite"
