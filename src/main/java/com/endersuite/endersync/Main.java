@@ -8,6 +8,8 @@ import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.Status;
 import com.endersuite.libcore.strfmt.StrFmt;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import de.maximilianheidenreich.jeventloop.EventLoop;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -16,6 +18,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -30,12 +35,12 @@ public class Main extends JavaPlugin {
     // ======================   VARS
 
     /**
-     * Plugin singleton.
+     * The plugin singleton.
      */
     private static Main plugin;
 
     /**
-     * Store the plugin folder (plugins/EnderSync).
+     * The plugin folder (plugins/EnderSync).
      */
     @Getter
     private static String pluginDataFolder;
@@ -45,6 +50,16 @@ public class Main extends JavaPlugin {
      */
     @Getter
     private EventLoop eventLoop;
+
+    /**
+     * The cache that stores player data received over the network.
+     * Note: Player data is stored a a Map with specific keys for each SyncModule TODO: finish docs
+     */
+    @Getter
+    private final Cache<UUID, Map<String, Object>> playerDataCache = Caffeine.newBuilder()
+                                                            .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                            .maximumSize(2_000)     // TODO: Extract to config?
+                                                            .build();
 
 
     // ======================   BUKKIT LOGIC
