@@ -1,9 +1,14 @@
 package com.endersuite.endersync;
 
+import com.endersuite.endersync.events.core.PacketReceivedEvent;
+import com.endersuite.endersync.events.handlers.TestPacketHandler;
+import com.endersuite.endersync.networking.NetworkManager;
+import com.endersuite.endersync.networking.packets.TestPacket;
 import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.Status;
 import com.endersuite.libcore.strfmt.StrFmt;
+import de.maximilianheidenreich.jeventloop.EventLoop;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,10 +30,21 @@ public class Main extends JavaPlugin {
     // ======================   VARS
 
     /**
+     * Plugin singleton.
+     */
+    private static Main plugin;
+
+    /**
      * Store the plugin folder (plugins/EnderSync).
      */
     @Getter
     private static String pluginDataFolder;
+
+    /**
+     * The eventloop used throughout the plugin.
+     */
+    @Getter
+    private EventLoop eventLoop;
 
 
     // ======================   BUKKIT LOGIC
@@ -39,11 +55,11 @@ public class Main extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        Main.plugin = this;
+        this.eventLoop = new EventLoop();
 
         StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync {status} : ";
         StrFmt.outputLevel = Level.TRACE;       // Dev only
-
-        StrFmt.fromLocalized("core.plugin-enable-start").setLevel(Level.INFO).toConsole();
 
         // Setup data folder
         Main.pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().getAbsolutePath();
@@ -93,6 +109,13 @@ public class Main extends JavaPlugin {
         // Connect to db
 
         // Connect to network
+        try {
+            NetworkManager.getInstance().connect("endersync_cluster");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        getEventLoop().addEventHandler(PacketReceivedEvent.class, NetworkManager.getInstance()::handlePacketReceivedEvent);
+        NetworkManager.getInstance().addPacketHandler(TestPacket.class, TestPacketHandler::handle);
 
         //
 
@@ -130,6 +153,8 @@ public class Main extends JavaPlugin {
                 .setLevel(Level.INFO)
                 .toConsole();
 
+        getEventLoop().start();
+
         StrFmt.fromLocalized("core.plugin-enable-success").setLevel(Level.INFO).toConsole();
 
     }
@@ -153,6 +178,13 @@ public class Main extends JavaPlugin {
     public void panic(String message) {
         new StrFmt("{prefix} Panic: " + message + "! (ノಠ益ಠ)ノ彡┻━┻").setLevel(Level.FATAL).toConsole();
         Bukkit.getPluginManager().disablePlugin(this);
+    }
+
+
+    // ======================   GETTER & SETTER
+
+    public static Main getPlugin() {
+        return Main.plugin;
     }
 
 }
