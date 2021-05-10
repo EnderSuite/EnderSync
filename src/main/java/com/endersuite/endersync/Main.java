@@ -56,7 +56,10 @@ public class Main extends JavaPlugin {
      * The plugin folder (plugins/EnderSync).
      */
     @Getter
-    private static String pluginDataFolder;
+    private static Path pluginDataFolder;
+
+    @Getter
+    private static Path pluginDepsFolder;
 
     /**
      * The eventloop used throughout the plugin.
@@ -90,20 +93,31 @@ public class Main extends JavaPlugin {
         StrFmt.outputLevel = Level.TRACE;       // Dev only
 
         // Setup data folder
-        Main.pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().getAbsolutePath();
-        File pluginFolder = new File(pluginDataFolder);
-        if (!pluginFolder.exists()) {
-            boolean res = pluginFolder.mkdir();
+        Main.pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().toPath();
+        File pluginFolder = pluginDataFolder.toFile();
+        if (!pluginFolder.exists() && !pluginFolder.mkdir()) {
+            panic("Could not create plugin data folder");
+            return;
+        }
 
-            if (!res) {
-                panic("Could not create plugin data folder");
-                return;
-            }
+        // Setup deps folder
+        Main.pluginDepsFolder = pluginDataFolder.resolve("deps");
+        File depsFolder = pluginDepsFolder.toFile();
+        if (!depsFolder.exists() && !depsFolder.mkdir()) {
+            panic("Could not create plugin deps folder");
+            return;
+        }
+
+        try {
+            ResourceUtil.extractResource("deps.txt", pluginDataFolder.resolve("deps.txt"), this);
+        } catch (IOException e) {
+            panic("Could not extract deps.txt resouce!", e);
+            return;
         }
 
         // Load config file
         try {
-            ConfigManager.getInstance().load("config", Paths.get(pluginDataFolder, "config.yml").toAbsolutePath().toString(), this);
+            ConfigManager.getInstance().load("config", pluginDataFolder.resolve("config.yml"), this);
         } catch (IOException exception) {
             exception.printStackTrace();
             panic("Could not load config.yml");
@@ -114,7 +128,7 @@ public class Main extends JavaPlugin {
         // Load lang file
         String langFile = "lang-" + ConfigManager.getInstance().get("config").getString("core.lang") + ".yml";
         try {
-            ConfigManager.getInstance().load("lang", Paths.get(pluginDataFolder, langFile).toAbsolutePath().toString(), this);
+            ConfigManager.getInstance().load("lang", pluginDataFolder.resolve(langFile), this);
         } catch (IOException exception) {
             exception.printStackTrace();
             panic("Could not load " + langFile);
@@ -125,7 +139,7 @@ public class Main extends JavaPlugin {
 
         // Load features file
         try {
-            ConfigManager.getInstance().load("features", Paths.get(pluginDataFolder, "features.yml").toAbsolutePath().toString(), this);
+            ConfigManager.getInstance().load("features", pluginDataFolder.resolve("features.yml"), this);
         } catch (IOException exception) {
             exception.printStackTrace();
             panic("Could not load features.yml");
