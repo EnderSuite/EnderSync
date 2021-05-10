@@ -155,13 +155,12 @@ public class Main extends JavaPlugin {
         // Connect to db
 
         // Connect to network
+        NetworkManager networkManager = NetworkManager.getInstance();
         try {
-            NetworkManager.getInstance().connect("endersync_cluster");
+            networkManager.connect("endersync_cluster");
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        getEventLoop().addEventHandler(PacketReceivedEvent.class, NetworkManager.getInstance()::handlePacketReceivedEvent);
-        NetworkManager.getInstance().addPacketHandler(TestPacket.class, TestPacketHandler::handle);
 
         //
 
@@ -199,12 +198,24 @@ public class Main extends JavaPlugin {
                 .setLevel(Level.INFO)
                 .toConsole();
 
-        getEventLoop().start();
+        // Register packet handlers
+        networkManager.addPacketHandler(CachePlayerDataPacket.class, CachePlayerDataPacketHandler::handleCachePlayerDataPacket);
+
+        // Register event handlers
+        eventLoop.addEventHandler(PlayerSaveEvent.class, PlayerSaveEventHandler::onPlayerSaveEvent);
+        eventLoop.addEventHandler(PlayerSynchronizeEvent.class, PlayerSynchronizeEventHandler::onPlayerSyncEvent);
+        eventLoop.addEventHandler(PacketReceivedEvent.class, NetworkManager.getInstance()::handlePacketReceivedEvent);
+
+        eventLoop.start();
+
+        // Register listeners
+        PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new PlayerJoinListener(), this);
+        pluginManager.registerEvents(new PlayerLeaveListener(), this);
 
         StrFmt.fromLocalized("core.plugin-enable-success").setLevel(Level.INFO).toConsole();
 
     }
-
 
     /**
      * Disables the plugin by gracefully shutting down opened connections & pending events.
