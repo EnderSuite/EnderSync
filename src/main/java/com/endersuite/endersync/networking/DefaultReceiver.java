@@ -3,7 +3,6 @@ package com.endersuite.endersync.networking;
 import com.endersuite.endersync.Main;
 import com.endersuite.endersync.events.core.PacketReceivedEvent;
 import com.endersuite.endersync.networking.packets.AbstractPacket;
-import com.endersuite.endersync.networking.packets.TestPacket;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
 import de.maximilianheidenreich.jeventloop.EventLoop;
