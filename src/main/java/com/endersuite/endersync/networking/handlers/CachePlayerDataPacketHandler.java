@@ -1,7 +1,7 @@
 package com.endersuite.endersync.networking.handlers;
 
 import com.endersuite.endersync.EnderSyncAPI;
-import com.endersuite.endersync.networking.packets.CachePlayerDataPacket;
+import com.endersuite.endersync.networking.packets.core.CachePlayerDataPacket;
 
 import java.util.UUID;
 

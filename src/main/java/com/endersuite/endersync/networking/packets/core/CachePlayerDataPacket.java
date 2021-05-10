@@ -1,6 +1,7 @@
-package com.endersuite.endersync.networking.packets;
+package com.endersuite.endersync.networking.packets.core;
 
 import com.endersuite.database.mysql.Row;
+import com.endersuite.endersync.networking.packets.AbstractPacket;
 import lombok.Getter;
 
 import java.util.Map;

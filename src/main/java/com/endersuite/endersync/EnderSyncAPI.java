@@ -5,7 +5,7 @@ import com.endersuite.endersync.modules.AbstractSynchronizedDataModule;
 import com.endersuite.endersync.modules.AbstractSynchronizedPlayerModule;
 import com.endersuite.endersync.modules.ModuleManager;
 import com.endersuite.endersync.networking.NetworkManager;
-import com.endersuite.endersync.networking.packets.CachePlayerDataPacket;
+import com.endersuite.endersync.networking.packets.core.CachePlayerDataPacket;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
 import org.bukkit.entity.Player;

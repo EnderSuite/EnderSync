@@ -14,7 +14,7 @@ import com.endersuite.endersync.modules.ModuleManager;
 import com.endersuite.endersync.modules.core.PlayerHealthModule;
 import com.endersuite.endersync.networking.handlers.CachePlayerDataPacketHandler;
 import com.endersuite.endersync.networking.NetworkManager;
-import com.endersuite.endersync.networking.packets.CachePlayerDataPacket;
+import com.endersuite.endersync.networking.packets.core.CachePlayerDataPacket;
 import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.file.ResourceUtil;
 import com.endersuite.libcore.strfmt.Level;
