@@ -246,6 +246,11 @@ public class Main extends JavaPlugin {
 
     // ======================   GETTER & SETTER
 
+    /**
+     * Returns the singleton instance of the Main class.
+     *
+     * @return The singleton instance of the Main class.
+     */
     public static Main getPlugin() {
         return Main.plugin;
     }
