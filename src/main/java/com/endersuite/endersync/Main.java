@@ -116,6 +116,9 @@ public class Main extends JavaPlugin {
             return;
         }
 
+        // Injects
+        //new ClassPathInjector(depsFolder, pluginDataFolder.resolve("deps.txt").toFile());
+
         // Load config file
         try {
             ConfigManager.getInstance().load("config", pluginDataFolder.resolve("config.yml"), this);
