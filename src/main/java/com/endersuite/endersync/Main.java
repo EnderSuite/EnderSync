@@ -1,9 +1,16 @@
 package com.endersuite.endersync;
 
+import com.endersuite.endersync.events.core.PacketReceivedEvent;
+import com.endersuite.endersync.events.handlers.TestPacketHandler;
+import com.endersuite.endersync.networking.NetworkManager;
+import com.endersuite.endersync.networking.packets.TestPacket;
 import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.Status;
 import com.endersuite.libcore.strfmt.StrFmt;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import de.maximilianheidenreich.jeventloop.EventLoop;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,6 +18,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -25,10 +35,31 @@ public class Main extends JavaPlugin {
     // ======================   VARS
 
     /**
-     * Store the plugin folder (plugins/EnderSync).
+     * The plugin singleton.
+     */
+    private static Main plugin;
+
+    /**
+     * The plugin folder (plugins/EnderSync).
      */
     @Getter
     private static String pluginDataFolder;
+
+    /**
+     * The eventloop used throughout the plugin.
+     */
+    @Getter
+    private EventLoop eventLoop;
+
+    /**
+     * The cache that stores player data received over the network.
+     * Note: Player data is stored a a Map with specific keys for each SyncModule TODO: finish docs
+     */
+    @Getter
+    private final Cache<UUID, Map<String, Object>> playerDataCache = Caffeine.newBuilder()
+                                                            .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                            .maximumSize(2_000)     // TODO: Extract to config?
+                                                            .build();
 
 
     // ======================   BUKKIT LOGIC
@@ -39,11 +70,11 @@ public class Main extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        Main.plugin = this;
+        this.eventLoop = new EventLoop();
 
         StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync {status} : ";
         StrFmt.outputLevel = Level.TRACE;       // Dev only
-
-        StrFmt.fromLocalized("core.plugin-enable-start").setLevel(Level.INFO).toConsole();
 
         // Setup data folder
         Main.pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().getAbsolutePath();
@@ -93,6 +124,13 @@ public class Main extends JavaPlugin {
         // Connect to db
 
         // Connect to network
+        try {
+            NetworkManager.getInstance().connect("endersync_cluster");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        getEventLoop().addEventHandler(PacketReceivedEvent.class, NetworkManager.getInstance()::handlePacketReceivedEvent);
+        NetworkManager.getInstance().addPacketHandler(TestPacket.class, TestPacketHandler::handle);
 
         //
 
@@ -130,6 +168,8 @@ public class Main extends JavaPlugin {
                 .setLevel(Level.INFO)
                 .toConsole();
 
+        getEventLoop().start();
+
         StrFmt.fromLocalized("core.plugin-enable-success").setLevel(Level.INFO).toConsole();
 
     }
@@ -153,6 +193,13 @@ public class Main extends JavaPlugin {
     public void panic(String message) {
         new StrFmt("{prefix} Panic: " + message + "! (ノಠ益ಠ)ノ彡┻━┻").setLevel(Level.FATAL).toConsole();
         Bukkit.getPluginManager().disablePlugin(this);
+    }
+
+
+    // ======================   GETTER & SETTER
+
+    public static Main getPlugin() {
+        return Main.plugin;
     }
 
 }
