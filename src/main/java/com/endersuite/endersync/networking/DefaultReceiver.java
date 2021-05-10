@@ -33,12 +33,6 @@ public class DefaultReceiver implements Receiver {
         new StrFmt("{prefix} Cluster members updated: " + new_view)
                 .setLevel(Level.DEBUG)
                 .toConsole();
-
-        try {   // TODO: remove
-            NetworkManager.getInstance().broadcast(new TestPacket(true));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
     }
 
     /**
