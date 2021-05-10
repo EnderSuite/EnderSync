@@ -88,6 +88,7 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         Main.plugin = this;
         this.eventLoop = new EventLoop();
+        ModuleManager.getInstance();
 
         StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync§r {status} : ";
         StrFmt.outputLevel = Level.TRACE;       // Dev only
@@ -145,6 +146,9 @@ public class Main extends JavaPlugin {
             panic("Could not load features.yml");
             return;
         }
+
+        // Load default modules
+        addDefaultModules();
 
         // Load extensions
 
@@ -220,6 +224,23 @@ public class Main extends JavaPlugin {
     public void panic(String message) {
         new StrFmt("{prefix} Panic: " + message + "! (ノಠ益ಠ)ノ彡┻━┻").setLevel(Level.FATAL).toConsole();
         Bukkit.getPluginManager().disablePlugin(this);
+    }
+
+    /**
+     * Panics (Disables) the plugin & Prints stacktrace. Should be used in case of a fatal exception!
+     */
+    public void panic(String message, Throwable throwable) {
+        throwable.printStackTrace();
+        this.panic(message);
+    }
+
+    private void addDefaultModules() {
+        // TODO: Config check
+        try {
+            ModuleManager.getInstance().addModule(new PlayerHealthModule());
+        } catch (DuplicateModuleNameException | InvalidModuleNameException e) {
+            e.printStackTrace();
+        }
     }
 
 
