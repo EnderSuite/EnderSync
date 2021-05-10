@@ -73,7 +73,7 @@ public class Main extends JavaPlugin {
         Main.plugin = this;
         this.eventLoop = new EventLoop();
 
-        StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync {status} : ";
+        StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync§r {status} : ";
         StrFmt.outputLevel = Level.TRACE;       // Dev only
 
         // Setup data folder
