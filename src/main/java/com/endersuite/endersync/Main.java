@@ -56,8 +56,8 @@ public class Main extends JavaPlugin {
      * Note: Player data is stored a a Map with specific keys for each SyncModule TODO: finish docs
      */
     @Getter
-    private final Cache<UUID, Map<String, Object>> playerDataCache = Caffeine.newBuilder()
-                                                            .expireAfterWrite(3, TimeUnit.SECONDS)
+    private final Cache<UUID, Map<String, Row>> playerDataCache = Caffeine.newBuilder()
+                                                            .expireAfterWrite(10, TimeUnit.SECONDS)
                                                             .maximumSize(2_000)     // TODO: Extract to config?
                                                             .build();
 
