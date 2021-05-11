@@ -1,6 +1,6 @@
 package com.endersuite.endersync.networking;
 
-import com.endersuite.endersync.Main;
+import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.events.core.PacketReceivedEvent;
 import com.endersuite.endersync.networking.packets.AbstractPacket;
 import com.endersuite.libcore.strfmt.Level;
@@ -19,7 +19,7 @@ import org.jgroups.util.MessageBatch;
  */
 public class DefaultReceiver implements Receiver {
 
-    private final EventLoop eventLoop = Main.getPlugin().getEventLoop();
+    private final EventLoop eventLoop = Plugin.getPlugin().getEventLoop();
 
     /**
      * TODO: Add docs -> What changes inside the plugin?

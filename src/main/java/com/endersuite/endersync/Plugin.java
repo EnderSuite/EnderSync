@@ -3,6 +3,7 @@ package com.endersuite.endersync;
 import com.endersuite.database.mysql.Row;
 import com.endersuite.endersync.bukkit.listeners.PlayerJoinListener;
 import com.endersuite.endersync.bukkit.listeners.PlayerLeaveListener;
+import com.endersuite.endersync.config.FeaturesJsonConfiguration;
 import com.endersuite.endersync.events.core.PacketReceivedEvent;
 import com.endersuite.endersync.events.core.PlayerSaveEvent;
 import com.endersuite.endersync.events.core.PlayerSynchronizeEvent;
@@ -11,12 +12,15 @@ import com.endersuite.endersync.events.handlers.PlayerSynchronizeEventHandler;
 import com.endersuite.endersync.exceptions.DuplicateModuleNameException;
 import com.endersuite.endersync.exceptions.InvalidModuleNameException;
 import com.endersuite.endersync.modules.ModuleManager;
+import com.endersuite.endersync.modules.core.PlayerGamemodeModule;
 import com.endersuite.endersync.modules.core.PlayerHealthModule;
-import com.endersuite.endersync.networking.handlers.CachePlayerDataPacketHandler;
 import com.endersuite.endersync.networking.NetworkManager;
+import com.endersuite.endersync.networking.handlers.CachePlayerDataPacketHandler;
 import com.endersuite.endersync.networking.packets.core.CachePlayerDataPacket;
 import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.file.ResourceUtil;
+import com.endersuite.libcore.plugin.EnderPlugin;
+import com.endersuite.libcore.plugin.bootstrap.PluginBootstrap;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.Status;
 import com.endersuite.libcore.strfmt.StrFmt;
@@ -26,7 +30,6 @@ import de.maximilianheidenreich.jeventloop.EventLoop;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,31 +38,34 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-
 /**
- * The main entry point of the plugin.
- * It does all the heavy lifting to get the plugin started.
+ * TODO: Add docs
  *
  * @author Maximilian Vincent Heidenreich
- * @since 08.05.21
+ * @since 11.05.21
  */
-public class Main extends JavaPlugin {
+public class Plugin extends EnderPlugin {
+
+    public Plugin(PluginBootstrap plugin) {
+        super(plugin);
+        Plugin.instance = this;
+    }
 
     // ======================   VARS
 
     /**
      * The plugin singleton.
      */
-    private static Main plugin;
+    private static Plugin instance;
 
     /**
      * The plugin folder (plugins/EnderSync).
      */
     @Getter
-    private static Path pluginDataFolder;
+    private Path pluginDataFolder;
 
     @Getter
-    private static Path pluginDepsFolder;
+    private Path pluginDepsFolder;
 
     /**
      * The eventloop used throughout the plugin.
@@ -72,10 +78,7 @@ public class Main extends JavaPlugin {
      * Note: Player data is stored a a Map with specific keys for each SyncModule TODO: finish docs
      */
     @Getter
-    private final Cache<UUID, Map<String, Row>> playerDataCache = Caffeine.newBuilder()
-                                                            .expireAfterWrite(10, TimeUnit.SECONDS)
-                                                            .maximumSize(2_000)     // TODO: Extract to config?
-                                                            .build();
+    private Cache<UUID, Map<String, Row>> playerDataCache;
 
 
     // ======================   BUKKIT LOGIC
@@ -86,15 +89,16 @@ public class Main extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        Main.plugin = this;
         this.eventLoop = new EventLoop();
         ModuleManager.getInstance();
 
         StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync§r {status} : ";
         StrFmt.outputLevel = Level.TRACE;       // Dev only
 
+        //new StrFmt("{prefix} Java version §a" + System.getProperty("java.version") + "§r is supported!").setLevel(Level.INFO).toConsole();
+
         // Setup data folder
-        Main.pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().toPath();
+        pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().toPath();
         File pluginFolder = pluginDataFolder.toFile();
         if (!pluginFolder.exists() && !pluginFolder.mkdir()) {
             panic("Could not create plugin data folder");
@@ -102,7 +106,7 @@ public class Main extends JavaPlugin {
         }
 
         // Setup deps folder
-        Main.pluginDepsFolder = pluginDataFolder.resolve("deps");
+        pluginDepsFolder = pluginDataFolder.resolve("deps");
         File depsFolder = pluginDepsFolder.toFile();
         if (!depsFolder.exists() && !depsFolder.mkdir()) {
             panic("Could not create plugin deps folder");
@@ -142,16 +146,27 @@ public class Main extends JavaPlugin {
         StrFmt.fromLocalized("debug.lang-test").setLevel(Level.DEBUG).toConsole();
 
         // Load features file
-        try {
+        /*try {
             ConfigManager.getInstance().load("features", pluginDataFolder.resolve("features.yml"), this);
         } catch (IOException exception) {
             exception.printStackTrace();
             panic("Could not load features.yml");
             return;
+        }*/
+        try {
+            ConfigManager.getInstance().loadJson("features", FeaturesJsonConfiguration.class, pluginDataFolder.resolve("features.json"));
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
 
         // Load default modules
         addDefaultModules();
+
+        // Setup cache
+        playerDataCache = Caffeine.newBuilder()
+                .expireAfterWrite(10, TimeUnit.SECONDS) // TODO: Extract from config
+                .maximumSize(2_000)     // TODO: Extract to config?
+                .build();
 
         // Load extensions
 
@@ -252,6 +267,7 @@ public class Main extends JavaPlugin {
         // TODO: Config check
         try {
             ModuleManager.getInstance().addModule(new PlayerHealthModule());
+            ModuleManager.getInstance().addModule(new PlayerGamemodeModule());
         } catch (DuplicateModuleNameException | InvalidModuleNameException e) {
             e.printStackTrace();
         }
@@ -265,8 +281,8 @@ public class Main extends JavaPlugin {
      *
      * @return The singleton instance of the Main class.
      */
-    public static Main getPlugin() {
-        return Main.plugin;
+    public static Plugin getPlugin() {
+        return Plugin.instance;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.endersuite.endersync.modules;
 
-import com.endersuite.database.mysql.Row;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +20,7 @@ public abstract class AbstractSynchronizedModule {
      * The unique name of the module (Also used for db table names).
      */
     @Getter
-    private String name;
+    private final String name;
 
     /**
      * Whether the module is critical for a successful synchronization.
@@ -39,7 +38,7 @@ public abstract class AbstractSynchronizedModule {
     @Setter
     private boolean raw;
 
-    
+
     // ======================   CONSTRUCTOR
 
     /**
@@ -59,8 +58,6 @@ public abstract class AbstractSynchronizedModule {
     // ======================   BUSINESS LOGIC
 
 
-
-    
     // ======================   HELPERS
 
     /**

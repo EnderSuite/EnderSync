@@ -1,6 +1,6 @@
 package com.endersuite.endersync.networking;
 
-import com.endersuite.endersync.Main;
+import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.networking.packets.AbstractPacket;
 import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.strfmt.Level;
@@ -32,11 +32,13 @@ public class NetworkManager extends AbstractPacketDelgator {
     @Getter
     private final JChannel jChannel;
 
+    //private Map<UUID, >
+
 
     // ======================   CONSTRUCTOR
 
     public NetworkManager() throws Exception {
-        super(Main.getPlugin().getEventLoop());
+        super(Plugin.getPlugin().getEventLoop());
 
         this.jChannel = new JChannel();
         this.jChannel.setReceiver(new DefaultReceiver());

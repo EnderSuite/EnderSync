@@ -5,26 +5,25 @@ import com.endersuite.database.mysql.builder.QueryBuilder;
 import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.modules.AbstractSynchronizedPlayerModule;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 /**
- * Synchronizes player health.
- *      - Health value
- *      - Health scale
- *      - Health max
+ * Synchronizes player gamemode.
+ *      - Gamemode
  *
  * @author Maximilian Vincent Heidenreich
  * @since 10.05.21
  */
-public class PlayerHealthModule extends AbstractSynchronizedPlayerModule {
+public class PlayerGamemodeModule extends AbstractSynchronizedPlayerModule {
 
 
     // ======================   VARS
 
     // ======================   CONSTRUCTOR
 
-    public PlayerHealthModule() {
-        super("core_health");
+    public PlayerGamemodeModule() {
+        super("core_gamemode");
     }
 
 
@@ -32,10 +31,12 @@ public class PlayerHealthModule extends AbstractSynchronizedPlayerModule {
 
     @Override
     public boolean synchronize(Player player, Row data) {
+
+        // TODO: Add incompatible check?
+        GameMode gameMode = GameMode.valueOf(data.getString("gamemode"));
+
         Bukkit.getScheduler().runTask(Plugin.getPlugin(), () -> {
-            player.setHealthScale(data.getDouble("scale"));
-            player.setMaxHealth(data.getDouble("max"));
-            player.setHealth(data.getDouble("health"));
+            player.setGameMode(gameMode);
         });
         return false;
     }
@@ -57,9 +58,7 @@ public class PlayerHealthModule extends AbstractSynchronizedPlayerModule {
 
     @Override
     public Row populateRow(Row row, Player player) {
-        row.add("health", player.getHealth());
-        row.add("max", player.getMaxHealth());
-        row.add("scale", player.getHealthScale());
+        row.add("gamemode", player.getGameMode().toString());
         return row;
     }
 
@@ -72,6 +71,7 @@ public class PlayerHealthModule extends AbstractSynchronizedPlayerModule {
     public String getUpdateString(Player player) {
         return null;
     }
+
 
     // ======================   HELPERS
 

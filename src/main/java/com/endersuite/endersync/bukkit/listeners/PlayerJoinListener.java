@@ -1,6 +1,6 @@
 package com.endersuite.endersync.bukkit.listeners;
 
-import com.endersuite.endersync.Main;
+import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.events.core.PlayerSynchronizeEvent;
 import de.maximilianheidenreich.jeventloop.EventLoop;
 import org.bukkit.event.EventHandler;
@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class PlayerJoinListener implements Listener {
 
-    private final static EventLoop eventLoop = Main.getPlugin().getEventLoop();
+    private final static EventLoop eventLoop = Plugin.getPlugin().getEventLoop();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {

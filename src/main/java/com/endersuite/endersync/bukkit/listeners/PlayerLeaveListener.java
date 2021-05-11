@@ -1,6 +1,7 @@
 package com.endersuite.endersync.bukkit.listeners;
 
-import com.endersuite.endersync.Main;
+import com.endersuite.endersync.Bootstrap;
+import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.events.core.PlayerSaveEvent;
 import de.maximilianheidenreich.jeventloop.EventLoop;
 import org.bukkit.event.EventHandler;
@@ -15,7 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerLeaveListener implements Listener {
 
-    private final static EventLoop eventLoop = Main.getPlugin().getEventLoop();
+    private final static EventLoop eventLoop = Plugin.getPlugin().getEventLoop();
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {

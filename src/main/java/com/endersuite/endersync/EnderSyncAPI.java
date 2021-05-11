@@ -76,10 +76,10 @@ public class EnderSyncAPI {
         // Send db select
 
         // CACHED
-        Map<String, Row> cachedPlayerData = Main.getPlugin().getPlayerDataCache().getIfPresent(player.getUniqueId());
+        Map<String, Row> cachedPlayerData = Plugin.getPlugin().getPlayerDataCache().getIfPresent(player.getUniqueId());
         if (cachedPlayerData != null) {
             new StrFmt("{prefix} Cache §ahit§r for '§e" + player.getUniqueId() + "§r'").setLevel(Level.DEBUG).toConsole();
-            Main.getPlugin().getPlayerDataCache().invalidate(player.getUniqueId());
+            Plugin.getPlugin().getPlayerDataCache().invalidate(player.getUniqueId());
             processPlayerSync(player, cachedPlayerData, playerSyncModules);
             return;
         }
@@ -95,8 +95,9 @@ public class EnderSyncAPI {
     }
 
     private void processPlayerSync(Player player, Map<String, Row> data) {
-        List<AbstractSynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules();
-        processPlayerSync(player, data, modules);
+        //List<AbstractSynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules().stream()
+        //        .filter(m -> m.config);
+        //processPlayerSync(player, data, modules);
     }
     private void processPlayerSync(Player player, Map<String, Row> data, Collection<AbstractSynchronizedPlayerModule> modules) {
         for (AbstractSynchronizedPlayerModule module : modules)
@@ -106,8 +107,9 @@ public class EnderSyncAPI {
 
     public void cachePlayerData(UUID playerUUID, Map<String, Row> data) {
         new StrFmt("{prefix} Caching player data for '§e" + playerUUID + "§r'").setLevel(Level.DEBUG).toConsole();
+        new StrFmt("{prefix} Cache data: " + data.toString()).setLevel(Level.TRACE).toConsole();
 
-        Main.getPlugin().getPlayerDataCache().put(playerUUID, data);
+        Plugin.getPlugin().getPlayerDataCache().put(playerUUID, data);
     }
 
 
