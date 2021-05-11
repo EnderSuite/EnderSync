@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * A wrapper class that stores registered packet handlers & callbacks.
- * TODO: Check if callbacks are needed and potentially remove dead imporots & code.
+ * TODO: Check if callbacks are needed and potentially remove dead imports & code.
  */
 @Getter
 public abstract class AbstractPacketDelgator {

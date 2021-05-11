@@ -1,9 +1,8 @@
 package com.endersuite.endersync.networking;
 
-import com.endersuite.endersync.Main;
+import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.events.core.PacketReceivedEvent;
 import com.endersuite.endersync.networking.packets.AbstractPacket;
-import com.endersuite.endersync.networking.packets.TestPacket;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
 import de.maximilianheidenreich.jeventloop.EventLoop;
@@ -20,7 +19,7 @@ import org.jgroups.util.MessageBatch;
  */
 public class DefaultReceiver implements Receiver {
 
-    private final EventLoop eventLoop = Main.getPlugin().getEventLoop();
+    private final EventLoop eventLoop = Plugin.getPlugin().getEventLoop();
 
     /**
      * TODO: Add docs -> What changes inside the plugin?
@@ -33,12 +32,6 @@ public class DefaultReceiver implements Receiver {
         new StrFmt("{prefix} Cluster members updated: " + new_view)
                 .setLevel(Level.DEBUG)
                 .toConsole();
-
-        try {   // TODO: remove
-            NetworkManager.getInstance().broadcast(new TestPacket(true));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
     }
 
     /**

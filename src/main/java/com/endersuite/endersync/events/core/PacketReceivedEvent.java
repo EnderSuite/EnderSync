@@ -37,7 +37,7 @@ public class PacketReceivedEvent extends AbstractEvent<Void> {
     // ======================   CONSTRUCTOR
 
     public PacketReceivedEvent(AbstractPacket packet, Address sender, Address recipient) {
-        super((byte) 2);
+        super((byte) 1);
         this.packet = packet;
         this.sender = sender;
         this.recipient = recipient;

@@ -1,7 +1,7 @@
 name: EnderSync
 version: 5.0.0
 author: EnderSuite Team
-main: com.endersuite.endersync.Main
+main: com.endersuite.endersync.Bootstrap
 softdepend: [Vault]
 loadafter: [Vault]
 
