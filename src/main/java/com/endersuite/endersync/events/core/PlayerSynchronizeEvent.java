@@ -1,6 +1,6 @@
 package com.endersuite.endersync.events.core;
 
-import com.endersuite.endersync.modules.AbstractSynchronizedPlayerModule;
+import com.endersuite.endersync.modules.ASynchronizedPlayerModule;
 import de.maximilianheidenreich.jeventloop.events.AbstractEvent;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class PlayerSynchronizeEvent extends AbstractEvent<Void> {
      * Note: null = all available modules
      */
     @Getter
-    private final Collection<AbstractSynchronizedPlayerModule> syncModules;
+    private final Collection<ASynchronizedPlayerModule> syncModules;
 
 
     // ======================   CONSTRUCTOR
@@ -37,7 +37,7 @@ public class PlayerSynchronizeEvent extends AbstractEvent<Void> {
         this(player, null);
     }
 
-    public PlayerSynchronizeEvent(Player player, Collection<AbstractSynchronizedPlayerModule> syncModules) {
+    public PlayerSynchronizeEvent(Player player, Collection<ASynchronizedPlayerModule> syncModules) {
         super((byte) 4);
         this.player = player;
         this.syncModules = syncModules;

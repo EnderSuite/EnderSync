@@ -1,7 +1,7 @@
 package com.endersuite.endersync.networking.packets.core;
 
 import com.endersuite.database.mysql.Row;
-import com.endersuite.endersync.networking.packets.AbstractPacket;
+import com.endersuite.endersync.networking.packets.APacket;
 import lombok.Getter;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * @author Maximilian Vincent Heidenreich
  * @since 10.05.21
  */
-public class CachePlayerDataPacket extends AbstractPacket {
+public class CachePlayerDataPacket extends APacket {
 
     // ======================   VARS
 

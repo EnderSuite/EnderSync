@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages {@link AbstractSynchronizedPlayerModule}s and {@link AbstractSynchronizedDataModule}s.
+ * Manages {@link ASynchronizedPlayerModule}s and {@link ASynchronizedDataModule}s.
  *
  * @author Maximilian Vincent Heidenreich
  * @since 10.05.21
@@ -27,13 +27,13 @@ public class ModuleManager {
      * The active playerSyncModules which will get processed on save / sync.
      */
     @Getter
-    private final List<AbstractSynchronizedPlayerModule> activePlayerModules;
+    private final List<ASynchronizedPlayerModule> activePlayerModules;
 
     /**
      * The active dataSyncModules which will get processed on interval.
      */
     @Getter
-    private final List<AbstractSynchronizedDataModule> activeDataModules;
+    private final List<ASynchronizedDataModule> activeDataModules;
 
 
     // ======================   CONSTRUCTOR
@@ -56,7 +56,7 @@ public class ModuleManager {
      * @throws InvalidModuleNameException
      *          When one or more invalid character were detected inside the name
      */
-    public void addModule(AbstractSynchronizedModule module) throws DuplicateModuleNameException, InvalidModuleNameException {
+    public void addModule(ASynchronizedModule module) throws DuplicateModuleNameException, InvalidModuleNameException {
         if (getActiveModuleByName(module.getName()) != null)
             throw new DuplicateModuleNameException(module);
 
@@ -68,10 +68,10 @@ public class ModuleManager {
                 throw new InvalidModuleNameException("No '" + c + "' allowed!", module);
         }
 
-        if (module instanceof AbstractSynchronizedDataModule)
-            activeDataModules.add((AbstractSynchronizedDataModule) module); // TODO: Add scheduler to dispatch event
-        else if (module instanceof AbstractSynchronizedPlayerModule)
-            activePlayerModules.add((AbstractSynchronizedPlayerModule) module);
+        if (module instanceof ASynchronizedDataModule)
+            activeDataModules.add((ASynchronizedDataModule) module); // TODO: Add scheduler to dispatch event
+        else if (module instanceof ASynchronizedPlayerModule)
+            activePlayerModules.add((ASynchronizedPlayerModule) module);
     }
 
     /**
@@ -82,12 +82,12 @@ public class ModuleManager {
      * @throws ModuleNotFoundException
      *          When the module was not found inside the active modules list
      */
-    public void removeModule(AbstractSynchronizedModule module) throws ModuleNotFoundException {
-        if (module instanceof AbstractSynchronizedDataModule) {
+    public void removeModule(ASynchronizedModule module) throws ModuleNotFoundException {
+        if (module instanceof ASynchronizedDataModule) {
             if (!activeDataModules.remove(module))
                 throw new ModuleNotFoundException(module);
         }
-        else if (module instanceof AbstractSynchronizedPlayerModule) {
+        else if (module instanceof ASynchronizedPlayerModule) {
             if (!activePlayerModules.remove(module))
                 throw new ModuleNotFoundException(module);
         }
@@ -106,9 +106,9 @@ public class ModuleManager {
      * @return
      *          The module | {@code null} if none were found
      */
-    public AbstractSynchronizedModule getActiveModuleByName(String name) {
-        AbstractSynchronizedDataModule dMod = activeDataModules.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
-        AbstractSynchronizedPlayerModule pMod = activePlayerModules.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
+    public ASynchronizedModule getActiveModuleByName(String name) {
+        ASynchronizedDataModule dMod = activeDataModules.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
+        ASynchronizedPlayerModule pMod = activePlayerModules.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
         return dMod != null ? dMod : pMod;
     }
 

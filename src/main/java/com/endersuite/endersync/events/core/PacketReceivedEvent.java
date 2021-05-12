@@ -1,12 +1,12 @@
 package com.endersuite.endersync.events.core;
 
-import com.endersuite.endersync.networking.packets.AbstractPacket;
+import com.endersuite.endersync.networking.packets.APacket;
 import de.maximilianheidenreich.jeventloop.events.AbstractEvent;
 import lombok.Getter;
 import org.jgroups.Address;
 
 /**
- * Gets dispatched whenever an {@link AbstractPacket} was received over the network.
+ * Gets dispatched whenever an {@link APacket} was received over the network.
  *
  * @author Maximilian Vincent Heidenreich
  * @since 09.05.21
@@ -19,7 +19,7 @@ public class PacketReceivedEvent extends AbstractEvent<Void> {
      * The received packet.
      */
     @Getter
-    private final AbstractPacket packet;
+    private final APacket packet;
 
     /**
      * The sender of the packet.
@@ -36,11 +36,11 @@ public class PacketReceivedEvent extends AbstractEvent<Void> {
 
     // ======================   CONSTRUCTOR
 
-    public PacketReceivedEvent(AbstractPacket packet, Address sender, Address recipient) {
+    public PacketReceivedEvent(APacket packet) {
         super((byte) 1);
         this.packet = packet;
-        this.sender = sender;
-        this.recipient = recipient;
+        this.sender = packet.getSender();
+        this.recipient = packet.getRecipient();
     }
 
 

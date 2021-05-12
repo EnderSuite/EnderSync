@@ -14,7 +14,7 @@ import java.util.UUID;
  * @since 09.05.21
  */
 @Getter
-public abstract class AbstractPacket implements Serializable {
+public abstract class APacket implements Serializable {
 
     // ======================   VARS
 
@@ -22,7 +22,7 @@ public abstract class AbstractPacket implements Serializable {
      * A unique id identifying the packet.
      */
     @Setter
-    private UUID id;
+    private final UUID id;
 
     /**
      * Timestamp at which the packet instance was created.
@@ -49,7 +49,7 @@ public abstract class AbstractPacket implements Serializable {
     /**
      * Create a new AbstractPacket with a random id.
      */
-    public AbstractPacket() {
+    public APacket() {
         this(UUID.randomUUID());
     }
 
@@ -59,7 +59,7 @@ public abstract class AbstractPacket implements Serializable {
      * @param id
      *          The id to use.
      */
-    public AbstractPacket(UUID id) {
+    public APacket(UUID id) {
         this.id = id;
         this.createdAt = System.currentTimeMillis();
     }

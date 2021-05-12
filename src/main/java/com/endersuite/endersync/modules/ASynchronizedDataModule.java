@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @author Maximilian Vincent Heidenreich
  * @since 09.05.21
  */
-public abstract class AbstractSynchronizedDataModule extends AbstractSynchronizedModule {
+public abstract class ASynchronizedDataModule extends ASynchronizedModule {
 
     // ======================   VARS
 
@@ -24,7 +24,7 @@ public abstract class AbstractSynchronizedDataModule extends AbstractSynchronize
 
     // ======================   CONSTRUCTOR
 
-    public AbstractSynchronizedDataModule(String name, long saveInterval, TimeUnit saveIntervalUnit, long syncInterval, TimeUnit syncIntervalUnit) {
+    public ASynchronizedDataModule(String name, long saveInterval, TimeUnit saveIntervalUnit, long syncInterval, TimeUnit syncIntervalUnit) {
         super(name);
         this.saveInterval = saveInterval;
         this.saveIntervalUnit = saveIntervalUnit;

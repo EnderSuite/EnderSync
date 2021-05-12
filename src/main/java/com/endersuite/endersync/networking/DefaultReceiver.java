@@ -2,7 +2,9 @@ package com.endersuite.endersync.networking;
 
 import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.events.core.PacketReceivedEvent;
-import com.endersuite.endersync.networking.packets.AbstractPacket;
+import com.endersuite.endersync.networking.handlers.CollectablePacketHandler;
+import com.endersuite.endersync.networking.packets.ACollectableResponsePacket;
+import com.endersuite.endersync.networking.packets.APacket;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
 import de.maximilianheidenreich.jeventloop.EventLoop;
@@ -29,7 +31,7 @@ public class DefaultReceiver implements Receiver {
      */
     @Override
     public void viewAccepted(View new_view) {
-        new StrFmt("{prefix} Cluster members updated: " + new_view)
+        new StrFmt("{prefix} Cluster members updated: §e" + new_view)
                 .setLevel(Level.DEBUG)
                 .toConsole();
     }
@@ -63,15 +65,24 @@ public class DefaultReceiver implements Receiver {
      *          The Message instance from JGroup
      */
     private void processSingleMessage(Message msg) {
-        if (msg.getObject() instanceof AbstractPacket) {
-            AbstractPacket packet = (AbstractPacket) msg.getObject();
+        if (msg.getObject() instanceof APacket) {
+            APacket packet = (APacket) msg.getObject();
             packet.setSender(msg.getSrc());
             packet.setRecipient(msg.getDest());
 
             new StrFmt("{prefix} Received packet: " + packet + " in " + (System.currentTimeMillis() - packet.getCreatedAt()) + "ms")
                     .setLevel(Level.DEBUG)
                     .toConsole();
-            eventLoop.dispatch(new PacketReceivedEvent(packet, msg.getSrc(), msg.getDest()));
+
+            // COLLECT RESPONSE PACKET
+            // Cast, add to collect, call callback if every node has responded
+            if (packet instanceof ACollectableResponsePacket) {
+                //CollectablePacketHandler.handleCollectablePacket((ACollectableResponsePacket) packet);
+            }
+
+            // DEFAULT PACKET
+            else eventLoop.dispatch(new PacketReceivedEvent(packet));
+
         }
     }
 

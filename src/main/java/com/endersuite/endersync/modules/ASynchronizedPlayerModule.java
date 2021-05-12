@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
  * @author Maximilian Vincent Heidenreich
  * @since 09.05.21
  */
-public abstract class AbstractSynchronizedPlayerModule extends AbstractSynchronizedModule {
+public abstract class ASynchronizedPlayerModule extends ASynchronizedModule {
 
     // ======================   VARS
 
@@ -25,7 +25,7 @@ public abstract class AbstractSynchronizedPlayerModule extends AbstractSynchroni
      * @param name
      *          The name of the module
      */
-    public AbstractSynchronizedPlayerModule(String name) {
+    public ASynchronizedPlayerModule(String name) {
         super(name);
     }
 

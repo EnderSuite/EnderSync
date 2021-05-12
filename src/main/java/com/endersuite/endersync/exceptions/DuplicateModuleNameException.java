@@ -1,6 +1,6 @@
 package com.endersuite.endersync.exceptions;
 
-import com.endersuite.endersync.modules.AbstractSynchronizedModule;
+import com.endersuite.endersync.modules.ASynchronizedModule;
 import lombok.Getter;
 
 /**
@@ -12,12 +12,12 @@ import lombok.Getter;
 public class DuplicateModuleNameException extends EnderSyncException {
 
     @Getter
-    private final AbstractSynchronizedModule module;
+    private final ASynchronizedModule module;
 
     @Getter
     private final String moduleName;
 
-    public DuplicateModuleNameException(AbstractSynchronizedModule module) {
+    public DuplicateModuleNameException(ASynchronizedModule module) {
         this.module = module;
         this.moduleName = module.getName();
     }

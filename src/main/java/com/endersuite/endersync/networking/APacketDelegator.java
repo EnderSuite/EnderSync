@@ -1,44 +1,40 @@
 package com.endersuite.endersync.networking;
 
 import com.endersuite.endersync.events.core.PacketReceivedEvent;
-import com.endersuite.endersync.networking.packets.AbstractPacket;
+import com.endersuite.endersync.networking.packets.APacket;
 import de.maximilianheidenreich.jeventloop.EventLoop;
-import de.maximilianheidenreich.jeventloop.utils.ExceptionUtils;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Synchronized;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * A wrapper class that stores registered packet handlers & callbacks.
- * TODO: Check if callbacks are needed and potentially remove dead imports & code.
  */
 @Getter
-public abstract class AbstractPacketDelgator {
+public abstract class APacketDelegator {
 
     // ======================   VARS
 
     /**
      * A queue containing unhandled packets.
      */
-    private final BlockingQueue<AbstractPacket> packetQueue;
+    private final BlockingQueue<APacket> packetQueue;
 
     /**
      * All registered handlers which will be executed if an event with matching class is dequeued.
      */
-    private final Map<Class<? extends AbstractPacket>, List<Consumer<? extends AbstractPacket>>> handlers;
+    private final Map<Class<? extends APacket>, List<Consumer<? extends APacket>>> handlers;
 
     /**
-     * Store all registered callbacks.
+     * Store all registered callbacks for single packet collection.
      */
-    //private final Map<UUID, CompletableFuture<AbstractPacket>>> callbacks;   // <packetId, <callback, timeout>>
+    private final Map<UUID, CompletableFuture<APacket>> callbacks;   // <packetId, <callback, timeout>>
+
+
+
 
     /**
      * A reference to an event loop that gets used for packet handling.
@@ -52,17 +48,17 @@ public abstract class AbstractPacketDelgator {
     /**
      * Creates a new AbstractPacketManager with a default singleThreadExecutor and new default EventLoop.
      */
-    public AbstractPacketDelgator() {
+    public APacketDelegator() {
         this(new EventLoop());
     }
 
     /**
      * Creates a new AbstractPacketManager with a custom executor.
      */
-    public AbstractPacketDelgator(EventLoop eventLoop) {
+    public APacketDelegator(EventLoop eventLoop) {
         this.packetQueue = new LinkedBlockingDeque<>();
         this.handlers = new ConcurrentHashMap<>();
-        //this.callbacks = new ConcurrentHashMap<>();
+        this.callbacks = new ConcurrentHashMap<>();
         this.eventLoop = eventLoop;
     }
 
@@ -77,7 +73,7 @@ public abstract class AbstractPacketDelgator {
      * @param handler
      *          The handler function
      */
-    public <P extends AbstractPacket> void addPacketHandler(Class<P> clazz, Consumer<P> handler) {
+    public <P extends APacket> void addPacketHandler(Class<P> clazz, Consumer<P> handler) {
 
         if (!getHandlers().containsKey(clazz))
             getHandlers().put(clazz, new ArrayList<>());
@@ -95,7 +91,7 @@ public abstract class AbstractPacketDelgator {
      * @return
      *          {@code true} if the handler was actually removed | {@code false} if no matching handler was registered
      */
-    public <P extends AbstractPacket> boolean removePacketHandler(Class<P> clazz, Consumer<P> handler) {
+    public <P extends APacket> boolean removePacketHandler(Class<P> clazz, Consumer<P> handler) {
 
         // RET: No handlers for class
         if (!getHandlers().containsKey(clazz))
@@ -173,7 +169,7 @@ public abstract class AbstractPacketDelgator {
      */
     //@Synchronized
     public void handlePacketReceivedEvent(PacketReceivedEvent event) {
-        AbstractPacket packet = event.getPacket();
+        APacket packet = event.getPacket();
 
         // RET: Timeout!
         /*if (packet.isTimeout()) {
@@ -185,8 +181,8 @@ public abstract class AbstractPacketDelgator {
         if (!getHandlers().containsKey(event.getPacket().getClass()))
             return;
 
-        for (Consumer<? extends AbstractPacket> rawHandler : getHandlers().get(packet.getClass())) {
-            Consumer<AbstractPacket> handler = (Consumer<AbstractPacket>) rawHandler;
+        for (Consumer<? extends APacket> rawHandler : getHandlers().get(packet.getClass())) {
+            Consumer<APacket> handler = (Consumer<APacket>) rawHandler;
 
             try { handler.accept(packet); }
             catch (Exception e) {

@@ -15,8 +15,10 @@ import com.endersuite.endersync.modules.ModuleManager;
 import com.endersuite.endersync.modules.core.PlayerGamemodeModule;
 import com.endersuite.endersync.modules.core.PlayerHealthModule;
 import com.endersuite.endersync.networking.NetworkManager;
-import com.endersuite.endersync.networking.handlers.CachePlayerDataPacketHandler;
+import com.endersuite.endersync.networking.handlers.core.CachePlayerDataPacketHandler;
+import com.endersuite.endersync.networking.handlers.player.RequestIsPlayerOnlinePacketHandler;
 import com.endersuite.endersync.networking.packets.core.CachePlayerDataPacket;
+import com.endersuite.endersync.networking.packets.core.player.RequestIsPlayerOnlinePacket;
 import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.file.ResourceUtil;
 import com.endersuite.libcore.plugin.EnderPlugin;
@@ -217,7 +219,8 @@ public class Plugin extends EnderPlugin {
                 .toConsole();
 
         // Register packet handlers
-        networkManager.addPacketHandler(CachePlayerDataPacket.class, CachePlayerDataPacketHandler::handleCachePlayerDataPacket);
+        networkManager.addPacketHandler(CachePlayerDataPacket.class, CachePlayerDataPacketHandler::handle);
+        //networkManager.addPacketHandler(RequestIsPlayerOnlinePacket.class, RequestIsPlayerOnlinePacketHandler::handle);
 
         // Register event handlers
         eventLoop.addEventHandler(PlayerSaveEvent.class, PlayerSaveEventHandler::onPlayerSaveEvent);

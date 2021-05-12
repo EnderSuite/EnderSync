@@ -5,14 +5,14 @@ import lombok.Setter;
 
 /**
  * Abstract structure every Module has to follow.
- * Note: You should probably use {@link AbstractSynchronizedPlayerModule} or {@link AbstractSynchronizedPlayerModule}!
+ * Note: You should probably use {@link ASynchronizedPlayerModule} or {@link ASynchronizedPlayerModule}!
  *
  * // TODO: JSON CONFIG?
  *
  * @author Maximilian Vincent Heidenreich
  * @since 09.05.21
  */
-public abstract class AbstractSynchronizedModule {
+public abstract class ASynchronizedModule {
     
     // ======================   VARS
 
@@ -48,7 +48,7 @@ public abstract class AbstractSynchronizedModule {
      * @param name
      *          The name of the module
      */
-    protected AbstractSynchronizedModule(String name) {
+    protected ASynchronizedModule(String name) {
         this.name = name;
         this.critical = false;
         this.raw = false;

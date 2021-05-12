@@ -3,7 +3,7 @@ package com.endersuite.endersync.modules.core;
 import com.endersuite.database.mysql.Row;
 import com.endersuite.database.mysql.builder.QueryBuilder;
 import com.endersuite.endersync.Plugin;
-import com.endersuite.endersync.modules.AbstractSynchronizedPlayerModule;
+import com.endersuite.endersync.modules.ASynchronizedPlayerModule;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
  * @author Maximilian Vincent Heidenreich
  * @since 10.05.21
  */
-public class PlayerGamemodeModule extends AbstractSynchronizedPlayerModule {
+public class PlayerGamemodeModule extends ASynchronizedPlayerModule {
 
 
     // ======================   VARS

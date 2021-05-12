@@ -1,15 +1,24 @@
 package com.endersuite.endersync.networking;
 
 import com.endersuite.endersync.Plugin;
-import com.endersuite.endersync.networking.packets.AbstractPacket;
+import com.endersuite.endersync.networking.handlers.CollectablePacketHandler;
+import com.endersuite.endersync.networking.packets.ACollectableRequestPacket;
+import com.endersuite.endersync.networking.packets.ACollectableResponsePacket;
+import com.endersuite.endersync.networking.packets.APacket;
 import com.endersuite.libcore.config.ConfigManager;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
 import lombok.Getter;
 import org.jgroups.Address;
 import org.jgroups.JChannel;
+import org.jgroups.ObjectMessage;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * TODO: Add docs
@@ -17,7 +26,7 @@ import java.util.UUID;
  * @author Maximilian Vincent Heidenreich
  * @since 09.05.21
  */
-public class NetworkManager extends AbstractPacketDelgator {
+public class NetworkManager extends APacketDelegator {
 
     // ======================   VARS
 
@@ -40,7 +49,7 @@ public class NetworkManager extends AbstractPacketDelgator {
     public NetworkManager() throws Exception {
         super(Plugin.getPlugin().getEventLoop());
 
-        this.jChannel = new JChannel();
+        this.jChannel = new JChannel(Plugin.getPlugin().getResource("jgroup_conf.xml"));
         this.jChannel.setReceiver(new DefaultReceiver());
         //this.jChannel.setDiscardOwnMessages(true);
 
@@ -84,8 +93,8 @@ public class NetworkManager extends AbstractPacketDelgator {
      *          The packet to send
      * @throws Exception
      */
-    public void send(Address destination, AbstractPacket packet) throws Exception {
-        getJChannel().send(destination, packet);
+    public void sendRaw(Address destination, APacket packet) throws Exception {
+        getJChannel().send(destination, packet);   // Add option to set custom flas like loopback
     }
 
     /**
@@ -95,8 +104,20 @@ public class NetworkManager extends AbstractPacketDelgator {
      *          The packet to send
      * @throws Exception
      */
-    public void broadcast(AbstractPacket packet) throws Exception {
-        send(null, packet);
+    public void broadcastRaw(APacket packet) throws Exception {
+        sendRaw(null, packet);
+    }
+
+    public void broadcastRaw(APacket packet, boolean loopback) throws Exception {
+
+    }
+
+    public <T extends ACollectableResponsePacket> CompletableFuture<List<? extends ACollectableResponsePacket>> broadcastCollect(ACollectableRequestPacket<T> packet) throws Exception {
+        CompletableFuture<List<? extends ACollectableResponsePacket>> callback = new CompletableFuture<>();
+        new StrFmt("sending: " + packet.getCollectId()).toConsole();
+        CollectablePacketHandler.getCollectionCallbacks().put(packet.getCollectId(), callback);
+        broadcastRaw(packet);
+        return callback;
     }
 
 

@@ -1,4 +1,4 @@
-package com.endersuite.endersync.networking.handlers;
+package com.endersuite.endersync.networking.handlers.core;
 
 import com.endersuite.endersync.EnderSyncAPI;
 import com.endersuite.endersync.networking.packets.core.CachePlayerDataPacket;
@@ -15,7 +15,7 @@ public class CachePlayerDataPacketHandler {
 
     private final static EnderSyncAPI api = EnderSyncAPI.getInstance();
 
-    public static void handleCachePlayerDataPacket(CachePlayerDataPacket packet) {
+    public static void handle(CachePlayerDataPacket packet) {
         api.cachePlayerData(UUID.fromString(packet.getPlayerUUID()), packet.getPlayerData());
     }
 

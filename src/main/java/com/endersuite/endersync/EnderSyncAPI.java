@@ -1,8 +1,8 @@
 package com.endersuite.endersync;
 
 import com.endersuite.database.mysql.Row;
-import com.endersuite.endersync.modules.AbstractSynchronizedDataModule;
-import com.endersuite.endersync.modules.AbstractSynchronizedPlayerModule;
+import com.endersuite.endersync.modules.ASynchronizedDataModule;
+import com.endersuite.endersync.modules.ASynchronizedPlayerModule;
 import com.endersuite.endersync.modules.ModuleManager;
 import com.endersuite.endersync.networking.NetworkManager;
 import com.endersuite.endersync.networking.packets.core.CachePlayerDataPacket;
@@ -39,27 +39,27 @@ public class EnderSyncAPI {
     // TODO: Use collection of module names? Currently the api is unsafe and accept random modules
 
     public void saveDataModules() {}
-    public void saveDataModules(Collection<AbstractSynchronizedDataModule> dataSyncModules) {}
+    public void saveDataModules(Collection<ASynchronizedDataModule> dataSyncModules) {}
 
     public void syncDataModules() {}
-    public void syncDataModules(Collection<AbstractSynchronizedDataModule> dataSyncModules) {}
+    public void syncDataModules(Collection<ASynchronizedDataModule> dataSyncModules) {}
 
     public void savePlayerModules(Player player) {
-        List<AbstractSynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules();
+        List<ASynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules();
         savePlayerModules(player, modules);
     }
-    public void savePlayerModules(Player player, Collection<AbstractSynchronizedPlayerModule> playerSyncModules) {
+    public void savePlayerModules(Player player, Collection<ASynchronizedPlayerModule> playerSyncModules) {
 
         // Send db update
 
         Map<String, Row> playerData = new HashMap<>();
 
-        for (AbstractSynchronizedPlayerModule module : playerSyncModules)
+        for (ASynchronizedPlayerModule module : playerSyncModules)
             playerData.put(module.getName(), module.toRow(player));
 
 
         try {
-            NetworkManager.getInstance().broadcast(new CachePlayerDataPacket(player.getUniqueId().toString(), playerData));
+            NetworkManager.getInstance().broadcastRaw(new CachePlayerDataPacket(player.getUniqueId().toString(), playerData));
         } catch (Exception exception) {
             exception.printStackTrace();
             // TODO: Print warn "Will fallback to database"
@@ -68,10 +68,10 @@ public class EnderSyncAPI {
     }
 
     public void syncPlayerModules(Player player) {
-        List<AbstractSynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules();
+        List<ASynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules();
         syncPlayerModules(player, modules);
     }
-    public void syncPlayerModules(Player player, Collection<AbstractSynchronizedPlayerModule> playerSyncModules) {
+    public void syncPlayerModules(Player player, Collection<ASynchronizedPlayerModule> playerSyncModules) {
 
         // Send db select
 
@@ -99,8 +99,8 @@ public class EnderSyncAPI {
         //        .filter(m -> m.config);
         //processPlayerSync(player, data, modules);
     }
-    private void processPlayerSync(Player player, Map<String, Row> data, Collection<AbstractSynchronizedPlayerModule> modules) {
-        for (AbstractSynchronizedPlayerModule module : modules)
+    private void processPlayerSync(Player player, Map<String, Row> data, Collection<ASynchronizedPlayerModule> modules) {
+        for (ASynchronizedPlayerModule module : modules)
             module.synchronize(player, data.get(module.getName()));     // TODO: Inactive module not in cahced data!
     }
 
