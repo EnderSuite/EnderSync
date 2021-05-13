@@ -1,0 +1,2 @@
+https://repo1.maven.org/maven2/com/github/ben-manes/caffeine/caffeine/2.9.1/caffeine-2.9.1.jar
+https://repo1.maven.org/maven2/org/jgroups/jgroups/4.2.14.Final/jgroups-4.2.14.Final.jar
