@@ -29,9 +29,10 @@ public class EnderSyncAPI {
     private static EnderSyncAPI instance;
 
 
+
     // ======================   CONSTRUCTOR
 
-    public EnderSyncAPI() {}
+    private EnderSyncAPI() {}
 
 
     // ======================   BUSINESS LOGIC
@@ -60,8 +61,9 @@ public class EnderSyncAPI {
 
         try {
             CachePlayerDataPacket packet = new CachePlayerDataPacket(player.getUniqueId().toString(), playerData);
-            Transmission.fromPacket(packet)
+            Transmission.newBuilder(packet)
                     .broadcast(true)
+                    .build()
                     .transmit();
         } catch (Exception exception) {
             exception.printStackTrace();

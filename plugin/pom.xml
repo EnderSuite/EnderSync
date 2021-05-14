@@ -19,8 +19,8 @@
         <dependency>
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
-            <version>5.1.6.Final</version>
-            <scope>provided</scope>
+            <version>4.2.14.Final</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Endersync-packets -->
@@ -28,15 +28,15 @@
             <groupId>com.endersuite.endersync</groupId>
             <artifactId>packets</artifactId>
             <version>5.0.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Caffeine -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>3.0.2</version>
-            <scope>provided</scope>
+            <version>2.9.1</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- LibCore -->
@@ -52,7 +52,7 @@
             <groupId>de.maximilian-heidenreich</groupId>
             <artifactId>jeventloop</artifactId>
             <version>2.5.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

@@ -24,6 +24,7 @@ import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.Status;
 import com.endersuite.libcore.strfmt.StrFmt;
 import com.endersuite.packify.NetworkManager;
+import com.endersuite.packify.transmission.Transmission;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import de.maximilianheidenreich.jeventloop.EventLoop;
@@ -151,13 +152,11 @@ public class Plugin extends EnderPlugin {
 
         // Load extensions
 
-        // Connect to db
 
         // Connect to network
-        NetworkManager networkManager;
         try {
-            networkManager = NetworkManager.initialize(eventLoop, ConfigManager.getInstance().get("config").getString("network.node-name"));
-            networkManager.connect("endersync_cluster");
+            this.networkManager = new NetworkManager(getEventLoop(), getConfigManager().get("config").getString("network.node-name"));
+            getNetworkManager().connect("endersync_cluster");
 
             // Register packet handlers
             getNetworkManager().addPacketHandler(CachePlayerDataPacket.class, CachePlayerDataPacketHandler::handle);
@@ -167,6 +166,8 @@ public class Plugin extends EnderPlugin {
             new StrFmt("{prefix} Could not initialize JGroup networking! Database fallback will be used! This might affect performance!", e).setLevel(Level.ERROR).toLog();
         }
 
+        // Connect to db
+        // TODO: Fatal if no network & db fail
 
         // Output test TODO: Remove
         new StrFmt("{prefix} Trace message")

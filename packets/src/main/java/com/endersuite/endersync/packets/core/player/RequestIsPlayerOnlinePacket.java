@@ -1,6 +1,6 @@
 package com.endersuite.endersync.packets.core.player;
 
-import com.endersuite.packify.packets.ACollectableRequestPacket;
+import com.endersuite.packify.packets.ACollectablePacket;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author Maximilian Vincent Heidenreich
  * @since 11.05.21
  */
-public class RequestIsPlayerOnlinePacket extends ACollectableRequestPacket<ResponseIsPlayerOnlinePacket> {
+public class RequestIsPlayerOnlinePacket extends ACollectablePacket {
 
     // ======================   VARS
 
