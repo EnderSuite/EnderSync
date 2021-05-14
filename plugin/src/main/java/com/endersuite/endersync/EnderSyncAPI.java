@@ -45,7 +45,7 @@ public class EnderSyncAPI {
     public void syncDataModules(Collection<ASynchronizedDataModule> dataSyncModules) {}
 
     public void savePlayerModules(Player player) {
-        List<ASynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules();
+        List<ASynchronizedPlayerModule> modules = Plugin.getPlugin().getModuleManager().getActivePlayerModules();
         savePlayerModules(player, modules);
     }
     public void savePlayerModules(Player player, Collection<ASynchronizedPlayerModule> playerSyncModules) {
@@ -71,7 +71,7 @@ public class EnderSyncAPI {
     }
 
     public void syncPlayerModules(Player player) {
-        List<ASynchronizedPlayerModule> modules = ModuleManager.getInstance().getActivePlayerModules();
+        List<ASynchronizedPlayerModule> modules = Plugin.getPlugin().getModuleManager().getActivePlayerModules();
         syncPlayerModules(player, modules);
     }
     public void syncPlayerModules(Player player, Collection<ASynchronizedPlayerModule> playerSyncModules) {

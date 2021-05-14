@@ -58,18 +58,18 @@ public class Plugin extends EnderPlugin {
      */
     private static Plugin instance;
 
+    // REFERENCES
+    @Getter private ConfigManager configManager;
+    @Getter private NetworkManager networkManager;
+    @Getter private ModuleManager moduleManager;
+    @Getter private EventLoop eventLoop;
+
     /**
      * The plugin folder (plugins/EnderSync).
      */
     @Getter
     private Path pluginDataFolder;
 
-
-    /**
-     * The eventloop used throughout the plugin.
-     */
-    @Getter
-    private EventLoop eventLoop;
 
     /**
      * The cache that stores player data received over the network.
@@ -88,7 +88,8 @@ public class Plugin extends EnderPlugin {
     @Override
     public void onEnable() {
         this.eventLoop = new EventLoop();
-        ModuleManager.getInstance();
+        this.configManager = new ConfigManager();
+        this.moduleManager = new ModuleManager();
 
         StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync§r {status} : ";
 
@@ -103,24 +104,24 @@ public class Plugin extends EnderPlugin {
 
         // Load config file
         try {
-            ConfigManager.getInstance().load("config", pluginDataFolder.resolve("config.yml"), this);
+            getConfigManager().load("config", pluginDataFolder.resolve("config.yml"), this);
         }
         catch (IOException e) {
             panic("Could not load config.yml", e);
             return;
         }
-        StrFmt.outputLevel = Level.valueOf(ConfigManager.getInstance().get("config").getString("core.log-level").toUpperCase());
+        StrFmt.outputLevel = Level.valueOf(getConfigManager().get("config").getString("core.log-level").toUpperCase());
 
         // Load lang file
-        String langFile = "lang-" + ConfigManager.getInstance().get("config").getString("core.lang") + ".yml";
+        String langFile = "lang-" + getConfigManager().get("config").getString("core.lang") + ".yml";
         try {
-            ConfigManager.getInstance().load("lang", pluginDataFolder.resolve(langFile), this);
+            getConfigManager().load("lang", pluginDataFolder.resolve(langFile), this);
         }
         catch (IOException e) {
             panic("Could not load " + langFile, e);
             return;
         }
-        StrFmt.localizationConfig = ConfigManager.getInstance().get("lang");
+        StrFmt.localizationConfig = getConfigManager().get("lang");
         StrFmt.fromLocalized("debug.lang-test").setLevel(Level.DEBUG).toLog();
 
         // Load features file
@@ -132,21 +133,21 @@ public class Plugin extends EnderPlugin {
             return;
         }*/
         try {
-            ConfigManager.getInstance().loadJson("features", FeaturesJsonConfiguration.class, pluginDataFolder.resolve("features.json"));
+            getConfigManager().loadJson("features", FeaturesJsonConfiguration.class, pluginDataFolder.resolve("features.json"));
         }
         catch (IOException e) {
             panic("Could not load features.yml", e);
             return;
         }
 
-        // Load default modules
-        addDefaultModules();
-
         // Setup cache
         playerDataCache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.SECONDS) // TODO: Extract from config
                 .maximumSize(2_000)     // TODO: Extract to config?
                 .build();
+
+        // Load default modules
+        addDefaultModules();
 
         // Load extensions
 
@@ -159,8 +160,8 @@ public class Plugin extends EnderPlugin {
             networkManager.connect("endersync_cluster");
 
             // Register packet handlers
-            networkManager.addPacketHandler(CachePlayerDataPacket.class, CachePlayerDataPacketHandler::handle);
-            networkManager.addPacketHandler(RequestIsPlayerOnlinePacket.class, RequestIsPlayerOnlinePacketHandler::handle);
+            getNetworkManager().addPacketHandler(CachePlayerDataPacket.class, CachePlayerDataPacketHandler::handle);
+            getNetworkManager().addPacketHandler(RequestIsPlayerOnlinePacket.class, RequestIsPlayerOnlinePacketHandler::handle);
         }
         catch (Exception e) {
             new StrFmt("{prefix} Could not initialize JGroup networking! Database fallback will be used! This might affect performance!", e).setLevel(Level.ERROR).toLog();
@@ -203,10 +204,10 @@ public class Plugin extends EnderPlugin {
 
 
         // Register event handlers
-        eventLoop.addEventHandler(PlayerSaveEvent.class, PlayerSaveEventHandler::onPlayerSaveEvent);
-        eventLoop.addEventHandler(PlayerSynchronizeEvent.class, PlayerSynchronizeEventHandler::onPlayerSyncEvent);
+        getEventLoop().addEventHandler(PlayerSaveEvent.class, PlayerSaveEventHandler::onPlayerSaveEvent);
+        getEventLoop().addEventHandler(PlayerSynchronizeEvent.class, PlayerSynchronizeEventHandler::onPlayerSyncEvent);
 
-        eventLoop.start();
+        getEventLoop().start();
 
         // Register listeners
         PluginManager pluginManager = getServer().getPluginManager();
@@ -248,8 +249,8 @@ public class Plugin extends EnderPlugin {
     private void addDefaultModules() {
         // TODO: Config check
         try {
-            ModuleManager.getInstance().addModule(new PlayerHealthModule());
-            ModuleManager.getInstance().addModule(new PlayerGamemodeModule());
+            getModuleManager().addModule(new PlayerHealthModule());
+            getModuleManager().addModule(new PlayerGamemodeModule());
         } catch (DuplicateModuleNameException | InvalidModuleNameException e) {
             e.printStackTrace();
         }

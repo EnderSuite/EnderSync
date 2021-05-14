@@ -19,11 +19,6 @@ public class ModuleManager {
     // ======================   VARS
 
     /**
-     * The ModuleManager singleton.
-     */
-    private static ModuleManager instance;
-
-    /**
      * The active playerSyncModules which will get processed on save / sync.
      */
     @Getter
@@ -110,20 +105,6 @@ public class ModuleManager {
         ASynchronizedDataModule dMod = activeDataModules.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
         ASynchronizedPlayerModule pMod = activePlayerModules.stream().filter(e -> e.getName().equals(name)).findFirst().orElse(null);
         return dMod != null ? dMod : pMod;
-    }
-
-    /**
-     * Returns the ModuleManager singleton instance.
-     * Note: Also creates one if none exists.
-     *
-     * @return The ModuleManager instance.
-     */
-    public static ModuleManager getInstance() {
-        if (ModuleManager.instance == null)
-            ModuleManager.instance = new ModuleManager();
-
-        return ModuleManager.instance;
-
     }
 
 }
