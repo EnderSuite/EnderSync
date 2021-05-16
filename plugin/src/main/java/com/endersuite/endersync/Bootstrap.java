@@ -25,7 +25,7 @@ public class Bootstrap extends PluginBootstrap {
             panic("Could not create dependency dir at '§e" + depsDir.getAbsolutePath() + "§r'");
         }
 
-        try {
+        /*try {
             getInjector().download(getResource("deps.txt"), depsDir.toPath(), false);
         }
         catch (RuntimeException e) {
@@ -38,7 +38,7 @@ public class Bootstrap extends PluginBootstrap {
         }
         catch (RuntimeException e) {
             panic("Could not inject dependencies", e);
-        }
+        }*/
 
         try {
             loadPlugin(Plugin.class);

@@ -4,5 +4,8 @@ core:
   plugin-disable-start: "{prefix} Disabling plugin"
   plugin-disable-success: "{prefix} Plugin was successfully disabled!"
 
-debug:
+misc:
   lang-test: "{prefix} This should be readable in the configured language :)"
+
+error:
+  foo: "bar"
