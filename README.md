@@ -11,6 +11,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![GPLv3 License][license-shield]][license-url]
+![Discord](https://img.shields.io/discord/313303575558356993?label=Discord&logo=discord&style=flat-square)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -43,6 +44,8 @@
     <a href="https://github.com/EnderSuite/EnderSync/issues">Report Bug</a>
     ·
     <a href="https://github.com/EnderSuite/EnderSync/issues">Request Feature</a>
+    ·
+    <a href="https://discord.gg/sgRMJrZcZE">Discord</a>
   </p>
 </p>
 
@@ -58,12 +61,73 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Todo
+EnderSync is a powerful tool for synchronizing data between multiple Minecraft Bukkit servers.
+The plugin ...
+
+We designed the plugin to be **Powerful** but **Performant**, **Easy to use** with **Stability** in mind.
 
 ### Features
 
-todo
+#### Core
+These are the core features of the plugin.
 
+*Note: Modules can be configured: TODO: TEMPLATING*
+
+- [ ] Compatible with versions 1.8 - 1.16
+- [x] Easy to install & use
+- [ ] Localization (See xxx)
+- [ ] Pleasing visuals & sounds
+- [ ] Configurable error handling
+  - [ ] Ignore (Silent)
+  - [ ] Kick player
+  - [ ] Inform player
+- [ ] Safety first (e.g. Anti duplication guard)
+- [ ] In-Game management commands
+  - [ ] Inv/End/Armor view
+- [ ] Modules
+  - [x] Health
+  - [ ] Food
+  - [ ] Air
+  - [ ] Experience
+  - [ ] Flight
+  - [x] GameMode
+  - [ ] (Potion) Effects
+  - [ ] Location
+    - [ ] World
+    - [ ] Bed spawn point
+    - [ ] Player position
+  - [ ] Inventory (incl. armor & enderchest)
+    - [ ] Normal items
+    - [ ] Items with custom metadata & NBT
+    - [ ] Placeholder items for synchronization across different server versions
+  - [ ] Economy
+    - [ ] Vault
+  
+
+#### Data storage & Performance
+
+- [ ] Database
+  - [ ] Store data inside any SQL database
+  - [ ] Migration from MySqlPlayerDatabase plugin
+- [x] Networking
+  - [x] Connect multiple servers (nodes) into a cluster
+  - [x] Data pre-caching (Drastically decreases sync. latency)
+  
+#### Extensibility
+EnderSync allows 3td. parties to develop `extensions` which can add functionality to the plugin like the synchronization 
+of additional data. We also provide an easy-to-use API, which enabled even more features (specially together with clustering)
+
+- [ ] Custom extensions
+- [ ] API
+  - [ ] Methods for Saving / Syncing modules
+
+#### Remote Management
+We provide the option to enable remote access through the cluster config. This will allow authenticated used to manage data 
+like player inventories from a web interface at [URL](#). If you want to use this feature [Remote management docs](#)
+
+- [ ] Remote management through web-interface
+  - [ ] View any stored data (table view)
+  - [ ] Custom view for core modules like player inventories (View & Manipulate inventories of online & offline players)
 
 
 <!-- CONTRIBUTING -->
@@ -81,6 +145,8 @@ If you do so, please follow the following steps:
 
 <!-- CONTACT -->
 ## Contact
+
+Chat on Discord: ![Discord](https://img.shields.io/discord/313303575558356993?label=Discord&logo=discord&style=flat-square)
 
 endersuite@maximilian-heidenreich.de - *Will change to contact@endersuite.com in the future*
 
