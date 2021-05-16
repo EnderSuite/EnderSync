@@ -1,4 +1,4 @@
-package com.endersuite.endersync.networking.handlers.core;
+package com.endersuite.endersync.networking.handler.core;
 
 import com.endersuite.endersync.EnderSyncAPI;
 import com.endersuite.endersync.packets.core.CachePlayerDataPacket;

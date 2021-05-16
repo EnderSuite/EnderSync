@@ -1,9 +1,9 @@
-package com.endersuite.endersync.modules.core;
+package com.endersuite.endersync.module.core;
 
 import com.endersuite.database.mysql.Row;
 import com.endersuite.database.mysql.builder.QueryBuilder;
 import com.endersuite.endersync.Plugin;
-import com.endersuite.endersync.modules.ASynchronizedPlayerModule;
+import com.endersuite.endersync.module.ASynchronizedPlayerModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

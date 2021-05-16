@@ -1,7 +1,7 @@
-package com.endersuite.endersync.bukkit.listeners;
+package com.endersuite.endersync.bukkit.listener;
 
 import com.endersuite.endersync.Plugin;
-import com.endersuite.endersync.events.core.PlayerSaveEvent;
+import com.endersuite.endersync.event.core.PlayerSaveEvent;
 import de.maximilianheidenreich.jeventloop.EventLoop;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

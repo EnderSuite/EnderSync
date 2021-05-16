@@ -1,9 +1,8 @@
 package com.endersuite.endersync;
 
 import com.endersuite.database.mysql.Row;
-import com.endersuite.endersync.modules.ASynchronizedDataModule;
-import com.endersuite.endersync.modules.ASynchronizedPlayerModule;
-import com.endersuite.endersync.modules.ModuleManager;
+import com.endersuite.endersync.module.ASynchronizedDataModule;
+import com.endersuite.endersync.module.ASynchronizedPlayerModule;
 import com.endersuite.endersync.packets.core.CachePlayerDataPacket;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;

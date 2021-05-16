@@ -1,10 +1,9 @@
-package com.endersuite.endersync.bukkit.listeners;
+package com.endersuite.endersync.bukkit.listener;
 
 import com.endersuite.endersync.Plugin;
-import com.endersuite.endersync.events.core.PlayerSynchronizeEvent;
+import com.endersuite.endersync.event.core.PlayerSynchronizeEvent;
 import com.endersuite.endersync.packets.core.player.RequestIsPlayerOnlinePacket;
 import com.endersuite.endersync.packets.core.player.ResponseIsPlayerOnlinePacket;
-import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
 import com.endersuite.packify.exceptions.CompletableTimeoutException;
 import com.endersuite.packify.packets.ACollectablePacket;

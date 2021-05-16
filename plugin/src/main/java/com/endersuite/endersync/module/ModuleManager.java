@@ -1,4 +1,4 @@
-package com.endersuite.endersync.modules;
+package com.endersuite.endersync.module;
 
 import com.endersuite.endersync.exceptions.DuplicateModuleNameException;
 import com.endersuite.endersync.exceptions.InvalidModuleNameException;

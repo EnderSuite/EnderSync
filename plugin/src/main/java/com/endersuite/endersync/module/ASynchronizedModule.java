@@ -1,4 +1,4 @@
-package com.endersuite.endersync.modules;
+package com.endersuite.endersync.module;
 
 import lombok.Getter;
 import lombok.Setter;

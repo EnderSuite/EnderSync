@@ -1,6 +1,6 @@
 package com.endersuite.endersync.exceptions;
 
-import com.endersuite.endersync.modules.ASynchronizedModule;
+import com.endersuite.endersync.module.ASynchronizedModule;
 import lombok.Getter;
 
 /**

@@ -1,7 +1,7 @@
-package com.endersuite.endersync.events.handlers;
+package com.endersuite.endersync.event.handler;
 
 import com.endersuite.endersync.EnderSyncAPI;
-import com.endersuite.endersync.events.core.PlayerSaveEvent;
+import com.endersuite.endersync.event.core.PlayerSaveEvent;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
 

@@ -1,6 +1,6 @@
-package com.endersuite.endersync.events.core;
+package com.endersuite.endersync.event.core;
 
-import com.endersuite.endersync.modules.ASynchronizedPlayerModule;
+import com.endersuite.endersync.module.ASynchronizedPlayerModule;
 import de.maximilianheidenreich.jeventloop.events.AbstractEvent;
 import lombok.Getter;
 import org.bukkit.entity.Player;

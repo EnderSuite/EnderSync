@@ -1,4 +1,4 @@
-package com.endersuite.endersync.networking.handlers.player;
+package com.endersuite.endersync.networking.handler.player;
 
 import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.packets.core.player.RequestIsPlayerOnlinePacket;

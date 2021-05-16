@@ -1,4 +1,4 @@
-package com.endersuite.endersync.modules.core;
+package com.endersuite.endersync.module.core;
 
 import com.endersuite.database.mysql.Row;
 import com.endersuite.database.mysql.builder.QueryBuilder;
