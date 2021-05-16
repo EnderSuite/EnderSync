@@ -25,7 +25,6 @@ import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.Status;
 import com.endersuite.libcore.strfmt.StrFmt;
 import com.endersuite.packify.NetworkManager;
-import com.endersuite.packify.transmission.Transmission;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import de.maximilianheidenreich.jeventloop.EventLoop;
@@ -256,6 +255,7 @@ public class Plugin extends EnderPlugin {
     private void addDefaultModules() {
         // TODO: Config check
         try {
+            getModuleManager().addModule(new InventoryModule());
             getModuleManager().addModule(new PlayerHealthModule());
             getModuleManager().addModule(new PlayerGamemodeModule());
         } catch (DuplicateModuleNameException | InvalidModuleNameException e) {

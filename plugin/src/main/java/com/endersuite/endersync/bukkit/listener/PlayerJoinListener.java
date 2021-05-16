@@ -31,7 +31,7 @@ public class PlayerJoinListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         eventLoop.dispatch(new PlayerSynchronizeEvent(event.getPlayer()));
 
-        RequestIsPlayerOnlinePacket packet = new RequestIsPlayerOnlinePacket(event.getPlayer().getUniqueId());
+        /*RequestIsPlayerOnlinePacket packet = new RequestIsPlayerOnlinePacket(event.getPlayer().getUniqueId());
         CompletableTransmission transmission = Transmission.newBuilder(packet)
                 .broadcast(true)
                 .collectAll()
@@ -54,7 +54,7 @@ public class PlayerJoinListener implements Listener {
         } catch (CompletableTimeoutException e) {
             System.out.println("Timeout blocking");
             e.printStackTrace();
-        }
+        }*/
 
 
         /*try {

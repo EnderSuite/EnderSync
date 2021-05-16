@@ -54,8 +54,13 @@ public class EnderSyncAPI {
 
         Map<String, Row> playerData = new HashMap<>();
 
-        for (ASynchronizedPlayerModule module : playerSyncModules)
-            playerData.put(module.getName(), module.toRow(player));
+        try {
+            for (ASynchronizedPlayerModule module : playerSyncModules)
+                playerData.put(module.getName(), module.toRow(player));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         try {
@@ -104,8 +109,19 @@ public class EnderSyncAPI {
         //processPlayerSync(player, data, modules);
     }
     private void processPlayerSync(Player player, Map<String, Row> data, Collection<ASynchronizedPlayerModule> modules) {
-        for (ASynchronizedPlayerModule module : modules)
-            module.synchronize(player, data.get(module.getName()));     // TODO: Inactive module not in cahced data!
+        for (ASynchronizedPlayerModule module : modules) {
+            boolean success = false;
+            try {
+                success = module.synchronize(player, data.get(module.getName()));     // TODO: Inactive module not in cahced data!
+            }
+            catch (RuntimeException e) {
+                if (module.isCritical()) {
+                    e.printStackTrace();
+                    new StrFmt("Could not synchronize critical module " + module + "due to: ", e).setLevel(Level.ERROR).toLog();
+                    // TODO: Do how config
+                }
+            }
+        }
     }
 
 

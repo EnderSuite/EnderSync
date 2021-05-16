@@ -71,7 +71,7 @@ public abstract class ASynchronizedModule {
      *          The table name
      */
     public String getTableName() {
-        return "esmod_" + name;
+        return "esmod_" + this.name;
     }
 
     
