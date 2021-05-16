@@ -60,6 +60,11 @@ public abstract class ASynchronizedModule {
 
     // ======================   HELPERS
 
+    @Override
+    public String toString() {
+        return String.format("Module(%s)", this.name);
+    }
+
     /**
      * Returns the db table name using the default format.
      * @return

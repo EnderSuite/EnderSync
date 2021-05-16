@@ -13,7 +13,7 @@ import java.util.*;
 
 /**
  * Public EnderSync API that is also used internally.
- * TODO: Maybe move singletons into plugin and plugin reference to here? & Make all internal things protected?
+ * TODO: Maybe move singletons into plugin and plugin reference to here? And Make all internal things protected?
  *
  * @author Maximilian Vincent Heidenreich
  * @since 10.05.21

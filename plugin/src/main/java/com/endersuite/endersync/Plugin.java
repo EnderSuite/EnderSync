@@ -221,7 +221,7 @@ public class Plugin extends EnderPlugin {
     }
 
     /**
-     * Disables the plugin by gracefully shutting down opened connections & pending events.
+     * Disables the plugin by gracefully shutting down opened connections and pending events.
      */
     @Override
     public void onDisable() {
@@ -234,6 +234,8 @@ public class Plugin extends EnderPlugin {
 
     /**
      * Panics (Disables) the plugin. Should be used in case of a fatal exception!
+     *
+     * @param message
      */
     public void panic(String message) {
         new StrFmt("{prefix} Panic: " + message + "! (ノಠ益ಠ)ノ彡┻━┻").setLevel(Level.FATAL).toLog();
@@ -241,7 +243,10 @@ public class Plugin extends EnderPlugin {
     }
 
     /**
-     * Panics (Disables) the plugin & Prints stacktrace. Should be used in case of a fatal exception!
+     * Panics (Disables) the plugin and Prints stacktrace. Should be used in case of a fatal exception!
+     *
+     * @param message
+     * @param throwable
      */
     public void panic(String message, Throwable throwable) {
         throwable.printStackTrace();
