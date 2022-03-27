@@ -53,7 +53,6 @@ public class FeaturesJsonConfiguration implements IConfiguration {
          */
         public boolean onSynchronize = false;
 
-
     }
 
 

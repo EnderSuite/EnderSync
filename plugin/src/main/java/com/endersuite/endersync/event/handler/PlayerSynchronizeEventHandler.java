@@ -16,10 +16,10 @@ public class PlayerSynchronizeEventHandler {
     public static void onPlayerSyncEvent(PlayerSynchronizeEvent event) {
         new StrFmt("{prefix} Handling " + event).setLevel(Level.DEBUG).toLog();
 
-        if (event.getSyncModules() == null)
+        /*if (event.getSyncModules() == null)
             EnderSyncAPI.getInstance().syncPlayerModules(event.getPlayer());
         else
-            EnderSyncAPI.getInstance().syncPlayerModules(event.getPlayer(), event.getSyncModules());
+            EnderSyncAPI.getInstance().syncPlayerModules(event.getPlayer(), event.getSyncModules());*/
     }
 
 }

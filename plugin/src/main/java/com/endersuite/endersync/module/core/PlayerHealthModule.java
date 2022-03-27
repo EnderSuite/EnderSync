@@ -1,11 +1,12 @@
 package com.endersuite.endersync.module.core;
 
 import com.endersuite.database.mysql.Row;
-import com.endersuite.database.mysql.builder.QueryBuilder;
 import com.endersuite.endersync.Plugin;
 import com.endersuite.endersync.module.ASynchronizedPlayerModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Synchronizes player health.
@@ -25,6 +26,7 @@ public class PlayerHealthModule extends ASynchronizedPlayerModule {
 
     public PlayerHealthModule() {
         super("core_health");
+        setCritical(true);
     }
 
 
@@ -37,22 +39,31 @@ public class PlayerHealthModule extends ASynchronizedPlayerModule {
             player.setMaxHealth(data.getDouble("max"));
             player.setHealth(data.getDouble("health"));
         });
+        return true;
+    }
+
+    @Override
+    public boolean save(Player player) {
+        CompletableFuture<Boolean> callback = new CompletableFuture<>();
+
         return false;
     }
 
     @Override
-    public boolean save(Player player, QueryBuilder queryBuilder) {
-        return false;
+    public boolean setupDatabase() {
+
+        //Plugin.getPlugin().getDb().execUpdate("CREATE TABLE IF NOT EXISTS " + getTableName() + " (uuid varchar(64) not null, scale double not null, max double not null, health double not null)");
+
+        return true;
     }
 
     @Override
-    public Row rawFetch(Player player) {
-        return null;
-    }
-
-    @Override
-    public Row rawUpdate(Player player) {
-        return null;
+    public CompletableFuture<Row> getRowFromDatabase(Player player) {
+        CompletableFuture<Row> callback = new CompletableFuture<>();
+        /*Plugin.getPlugin().getDb().asyncQuery((resultHandler) -> {
+            callback.complete(resultHandler.getRowList().get(0));
+        }, "SELECT scale, max, health FROM " + getTableName() + " WHERE uuid=?", player.getUniqueId().toString());*/
+        return callback;
     }
 
     @Override
@@ -63,15 +74,6 @@ public class PlayerHealthModule extends ASynchronizedPlayerModule {
         return row;
     }
 
-    @Override
-    public String getQueryString(Player player) {
-        return null;
-    }
-
-    @Override
-    public String getUpdateString(Player player) {
-        return null;
-    }
 
     // ======================   HELPERS
 

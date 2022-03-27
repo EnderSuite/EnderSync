@@ -19,6 +19,10 @@ public class PlayerLeaveListener implements Listener {
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
+
+        // We do this synchronously to ensure that the player gets locked and no player data is lost
+        // save
+
         eventLoop.dispatch(new PlayerSaveEvent(event.getPlayer()));
     }
 

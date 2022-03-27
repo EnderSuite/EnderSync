@@ -1,8 +1,11 @@
 package com.endersuite.endersync.module;
 
 import com.endersuite.database.mysql.Row;
-import com.endersuite.database.mysql.builder.QueryBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Encapsulates some player (uuid) related data that can be synchronized across cluster nodes.
@@ -15,6 +18,10 @@ import org.bukkit.entity.Player;
 public abstract class ASynchronizedPlayerModule extends ASynchronizedModule {
 
     // ======================   VARS
+
+    @Getter
+    @Setter
+    private String SQL_UPDATE;
 
     // ======================   CONSTRUCTOR
 
@@ -51,17 +58,21 @@ public abstract class ASynchronizedPlayerModule extends ASynchronizedModule {
      * Note: Should call
      * @param player
      *          The player to save
-     * @param queryBuilder
-     *          The builder used to build the update query
      * @return
      *          {@code true} if the save was successful | {@code false} if not
      */
-    public abstract boolean save(Player player, QueryBuilder queryBuilder);
+    public abstract boolean save(Player player);
 
-
-    // TODO: Add as option but suggest using batcher
-    public abstract Row rawFetch(Player player);
-    public abstract Row rawUpdate(Player player);
+    /**
+     * Should implement logic to fetch latest data from database.
+     *
+     * @param player
+     *          The player who's data to fetch
+     * @return
+     *          A completable future which should be completed when the data is fetched successfully
+     *          OR excepted if there was an issue
+     */
+    public abstract CompletableFuture<Row> getRowFromDatabase(Player player);
 
     /**
      * Converts current player data to a row object.
@@ -93,14 +104,5 @@ public abstract class ASynchronizedPlayerModule extends ASynchronizedModule {
 
 
     // ======================   HELPERS
-
-    public abstract String getQueryString(Player player);
-
-    public abstract String getUpdateString(Player player);
-
-
-
-
-
 
 }

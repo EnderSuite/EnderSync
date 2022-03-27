@@ -1,9 +1,16 @@
 package com.endersuite.endersync;
 
+import com.dieselpoint.norm.Database;
+import com.endersuite.database.configuration.Credentials;
+import com.endersuite.database.mysql.MySQLDatabase;
 import com.endersuite.database.mysql.Row;
+import com.endersuite.endersync.bukkit.listener.PlaceholderItemListener;
 import com.endersuite.endersync.config.FeaturesJsonConfiguration;
+import com.endersuite.endersync.config.MainConfiguration;
+import com.endersuite.endersync.database.models.Player;
+import com.endersuite.endersync.database.models.Settings;
 import com.endersuite.endersync.module.core.InventoryModule;
-import com.endersuite.endersync.module.core.PlayerGamemodeModule;
+import com.endersuite.endersync.module.core.PlayerGameModeModule;
 import com.endersuite.endersync.module.core.PlayerHealthModule;
 import com.endersuite.endersync.bukkit.listener.PlayerJoinListener;
 import com.endersuite.endersync.bukkit.listener.PlayerLeaveListener;
@@ -35,8 +42,11 @@ import org.bukkit.plugin.PluginManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,8 +72,11 @@ public class Plugin extends EnderPlugin {
     // REFERENCES
     @Getter private ConfigManager configManager;
     @Getter private NetworkManager networkManager;
-    @Getter private ModuleManager moduleManager;
+    @Getter private Database db;
+    //@Getter private ModuleManager moduleManager;
+    //@Getter private DataRaceManager dataRaceManager;
     @Getter private EventLoop eventLoop;
+    //@Getter private MySQLDatabase db;    // TODO: Come up with a good name / place cuz Bukkit Plugin class already impl getDatabase()!
 
     /**
      * The plugin folder (plugins/EnderSync).
@@ -79,6 +92,9 @@ public class Plugin extends EnderPlugin {
     @Getter
     private Cache<UUID, Map<String, Row>> playerDataCache;
 
+    @Getter
+    private Cache<UUID, CompletableFuture<Map<String, Row>>> cacheCallbacks;
+
 
     // ======================   BUKKIT LOGIC
 
@@ -90,119 +106,144 @@ public class Plugin extends EnderPlugin {
     public void onEnable() {
         this.eventLoop = new EventLoop();
         this.configManager = new ConfigManager();
-        this.moduleManager = new ModuleManager();
+        //this.moduleManager = new ModuleManager();
+        //this.dataRaceManager = new DataRaceManager();
 
         StrFmt.prefix = "{level} §l§7» §l§3Ender§l§fSync§r {status} : ";
 
         // Setup data folder
-        pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().toPath();
+        this.pluginDataFolder = Bukkit.getPluginManager().getPlugin("EnderSync").getDataFolder().toPath();
         File pluginFolder = pluginDataFolder.toFile();
         if (!pluginFolder.exists() && !pluginFolder.mkdir()) {
             panic("Could not create plugin data folder");
             return;
         }
 
-
         // Load config file
         try {
-            getConfigManager().load("config", pluginDataFolder.resolve("config.yml"), this);
-        }
-        catch (IOException e) {
+            getConfigManager().loadJson("config", MainConfiguration.class, pluginDataFolder.resolve("config.json"));
+            //getConfigManager().load("config", pluginDataFolder.resolve("config.yml"), this);
+        } catch (IOException e) {
             panic("Could not load config.yml", e);
             return;
         }
-        StrFmt.outputLevel = Level.valueOf(getConfigManager().get("config").getString("core.log-level").toUpperCase());
+        StrFmt.outputLevel = ((MainConfiguration) getConfigManager().getJson("config")).logLevel;
 
         // Load lang file
-        String langFile = "lang-" + getConfigManager().get("config").getString("core.lang") + ".yml";
+        String langFile = "lang-" + ((MainConfiguration) getConfigManager().getJson("config")).lang + ".yml";
         try {
             getConfigManager().load("lang", pluginDataFolder.resolve(langFile), this);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             panic("Could not load " + langFile, e);
             return;
         }
         StrFmt.localizationConfig = getConfigManager().get("lang");
-        StrFmt.fromLocalized("debug.lang-test").setLevel(Level.DEBUG).toLog();
+        //StrFmt.fromLocalized("debug.lang-test").setLevel(Level.DEBUG).toLog();
 
         // Load features file
         /*try {
-            ConfigManager.getInstance().load("features", pluginDataFolder.resolve("features.yml"), this);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            panic("Could not load features.yml");
-            return;
-        }*/
-        try {
             getConfigManager().loadJson("features", FeaturesJsonConfiguration.class, pluginDataFolder.resolve("features.json"));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             panic("Could not load features.yml", e);
             return;
-        }
+        }*/
 
         // Setup cache
-        playerDataCache = Caffeine.newBuilder()
+        /*this.playerDataCache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.SECONDS) // TODO: Extract from config
                 .maximumSize(2_000)     // TODO: Extract to config?
                 .build();
 
-        // Load default modules
-        addDefaultModules();
-
-        // Load extensions
-
+        this.cacheCallbacks = Caffeine.newBuilder()
+                .expireAfterAccess(0, TimeUnit.NANOSECONDS) // Good? or longer time but manual evict inside callback?
+                .maximumSize(2_000)
+                .build();*/
 
         // Connect to network
-        try {
-            this.networkManager = new NetworkManager(getEventLoop(), getConfigManager().get("config").getString("network.node-name"));
+        /*try {
+            throw new Exception("test");
+            this.networkManager = new NetworkManager(getEventLoop(), ((MainConfiguration) getConfigManager().getJson("config")).networking.nodeName);
             getNetworkManager().connect("endersync_cluster");
 
             // Register packet handlers
             getNetworkManager().addPacketHandler(CachePlayerDataPacket.class, CachePlayerDataPacketHandler::handle);
             getNetworkManager().addPacketHandler(RequestIsPlayerOnlinePacket.class, RequestIsPlayerOnlinePacketHandler::handle);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             new StrFmt("{prefix} Could not initialize JGroup networking! Database fallback will be used! This might affect performance!", e).setLevel(Level.ERROR).toLog();
-        }
+        }*/
 
         // Connect to db
         // TODO: Fatal if no network & db fail
+        /*{
+            MainConfiguration config = getConfigManager().getJson("config");
+            Credentials credentials = new Credentials(
+                    config.database.host,
+                    config.database.database,
+                    config.database.username,
+                    config.database.password,
+                    config.database.port,
+                    config.database.useSSL,
+                    false
+            );
+            try {
+                this.db = new MySQLDatabase(credentials);
+                //this.db.connect();    // TODO: change db lib to throw error
+            } catch (Exception e) {
+                panic("Could not connect to database at " + this.db.toString(), e);  // TODO: Change to conn URI
+                return;
+            }
+            //this.db.execUpdate("CREATE TABLE IF NOT EXISTS player_locks (uuid varchar(36) not null, locked BOOLEAN not null, PRIMARY KEY (uuid))");
+        }*/
 
-        // Output test TODO: Remove
-        new StrFmt("{prefix} Trace message")
-                .setLevel(Level.TRACE)
-                .toLog();
-        new StrFmt("{prefix} Debug message")
-                .setLevel(Level.DEBUG)
-                .toLog();
-        new StrFmt("{prefix} Info message")
-                .setLevel(Level.INFO)
-                .toLog();
-        new StrFmt("{prefix} Warning message")
-                .setLevel(Level.WARN)
-                .toLog();
-        new StrFmt("{prefix} error message")
-                .setLevel(Level.ERROR)
-                .toLog();
-        new StrFmt("{prefix} fatal message")
-                .setLevel(Level.FATAL)
-                .toLog();
+        // Load default modules
+        //addDefaultModules();
 
-        new StrFmt("{prefix} Progress message")
-                .setStatus(Status.PROGRESS)
-                .setLevel(Level.INFO)
-                .toLog();
-        new StrFmt("{prefix} Good message")
-                .setStatus(Status.GOOD)
-                .setLevel(Level.INFO)
-                .toLog();
-        new StrFmt("{prefix} Bad message")
-                .setStatus(Status.BAD)
-                .setLevel(Level.INFO)
-                .toLog();
+        // Load extensions
+
+        {
+            // Output test TODO: Remove
+            new StrFmt("{prefix} Trace message with %s", "formatter replacement lul")
+                    .setLevel(Level.TRACE)
+                    .toLog();
+            new StrFmt("{prefix} Debug message")
+                    .setLevel(Level.DEBUG)
+                    .toLog();
+            new StrFmt("{prefix} Info message")
+                    .setLevel(Level.INFO)
+                    .toLog();
+            new StrFmt("{prefix} Warning message")
+                    .setLevel(Level.WARN)
+                    .toLog();
+            new StrFmt("{prefix} error message")
+                    .setLevel(Level.ERROR)
+                    .toLog();
+            new StrFmt("{prefix} fatal message")
+                    .setLevel(Level.FATAL)
+                    .toLog();
+
+            new StrFmt("{prefix} Progress message")
+                    .setStatus(Status.PROGRESS)
+                    .setLevel(Level.INFO)
+                    .toLog();
+            new StrFmt("{prefix} Good message")
+                    .setStatus(Status.GOOD)
+                    .setLevel(Level.INFO)
+                    .toLog();
+            new StrFmt("{prefix} Bad message")
+                    .setStatus(Status.BAD)
+                    .setLevel(Level.INFO)
+                    .toLog();
+        }
 
 
+        db = new Database();
+        db.setJdbcUrl("jdbc:mysql://localhost:3306/endersuite?useSSL=false");
+        db.setUser("root");
+        db.setPassword("esDev");
+
+        Long cnt = db.sql("SELECT count(*) FROM information_schema.tables WHERE table_name = 'endersync_players' LIMIT 1;").first(Long.class);
+        new StrFmt("Cnt: " + cnt, Level.INFO).toLog();
+        if (cnt <= 0) db.createTable(Player.class);
 
         // Register event handlers
         getEventLoop().addEventHandler(PlayerSaveEvent.class, PlayerSaveEventHandler::onPlayerSaveEvent);
@@ -214,6 +255,7 @@ public class Plugin extends EnderPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(), this);
         pluginManager.registerEvents(new PlayerLeaveListener(), this);
+        pluginManager.registerEvents(new PlaceholderItemListener(), this);
 
         StrFmt.fromLocalized("core.plugin-enable-success").setLevel(Level.INFO).toLog();
 
@@ -225,6 +267,10 @@ public class Plugin extends EnderPlugin {
     @Override
     public void onDisable() {
         StrFmt.fromLocalized("core.plugin-disable-start").setLevel(Level.INFO).toLog();
+
+        this.networkManager.disconnect();
+        //this.db.disconnect();
+
         StrFmt.fromLocalized("core.plugin-disable-success").setLevel(Level.INFO).toLog();
     }
 
@@ -237,7 +283,7 @@ public class Plugin extends EnderPlugin {
      * @param message
      */
     public void panic(String message) {
-        new StrFmt("{prefix} Panic: " + message + "! (ノಠ益ಠ)ノ彡┻━┻").setLevel(Level.FATAL).toLog();
+        new StrFmt("{prefix} Panic: %s! (ノಠ益ಠ)ノ彡┻━┻", message).setLevel(Level.FATAL).toLog();
         Bukkit.getPluginManager().disablePlugin(this);
     }
 
@@ -252,16 +298,16 @@ public class Plugin extends EnderPlugin {
         this.panic(message);
     }
 
-    private void addDefaultModules() {
+    /*private void addDefaultModules() {
         // TODO: Config check
         try {
             getModuleManager().addModule(new InventoryModule());
             getModuleManager().addModule(new PlayerHealthModule());
-            getModuleManager().addModule(new PlayerGamemodeModule());
+            getModuleManager().addModule(new PlayerGameModeModule());
         } catch (DuplicateModuleNameException | InvalidModuleNameException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
     // ======================   GETTER & SETTER

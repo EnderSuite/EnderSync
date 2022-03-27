@@ -3,6 +3,13 @@ package com.endersuite.endersync;
 import com.endersuite.libcore.plugin.bootstrap.PluginBootstrap;
 import com.endersuite.libcore.strfmt.Level;
 import com.endersuite.libcore.strfmt.StrFmt;
+import org.bukkit.plugin.PluginLoadOrder;
+import org.bukkit.plugin.java.annotation.dependency.LoadBefore;
+import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
+import org.bukkit.plugin.java.annotation.plugin.Description;
+import org.bukkit.plugin.java.annotation.plugin.LoadOrder;
+import org.bukkit.plugin.java.annotation.plugin.Website;
+import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 import java.io.File;
 
@@ -13,6 +20,13 @@ import java.io.File;
  * @author Maximilian Vincent Heidenreich
  * @since 08.05.21
  */
+@org.bukkit.plugin.java.annotation.plugin.Plugin(name="EnderSync", version="5.0")
+@Description("Synchronize data between servers.")
+@LoadOrder(PluginLoadOrder.POSTWORLD)
+@Author("StackUnderflow_, TheRealDomm")
+@Website("sync.endersuite.com")
+@LoadBefore("Vault")
+@SoftDependency("Vault")
 public class Bootstrap extends PluginBootstrap {
 
 

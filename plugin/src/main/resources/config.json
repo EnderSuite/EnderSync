@@ -1,0 +1,20 @@
+{
+  "visit-for-info-wiki": "http:://sync.endersuite.com/wiki",
+  "core": {
+    "logLevel": "trace",
+    "lang": "en",
+    "databaseBackend": "sql"
+  },
+  "networking": {
+    "useNetworking": true,
+    "nodeName": "default"
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "database": "endersync",
+    "user": "root",
+    "password": "esDev",
+    "ssl": true
+  }
+}

@@ -1,10 +1,13 @@
 package com.endersuite.endersync.module;
 
+import com.endersuite.endersync.Plugin;
+import com.endersuite.endersync.config.FeaturesJsonConfiguration;
 import com.endersuite.endersync.exceptions.DuplicateModuleNameException;
 import com.endersuite.endersync.exceptions.InvalidModuleNameException;
 import com.endersuite.endersync.exceptions.ModuleNotFoundException;
 import lombok.Getter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +65,36 @@ public class ModuleManager {
             if (name.indexOf(c) != -1)
                 throw new InvalidModuleNameException("No '" + c + "' allowed!", module);
         }
+
+        /*FeaturesJsonConfiguration features = Plugin.getPlugin().getConfigManager().getJson("features");
+        if (!features.modules.containsKey(module.getName()) && module.getModuleConfigurationClass() != null) {
+            try {
+                features.modules.put(module.getName(), module.getModuleConfigurationClass().asSubclass(FeaturesJsonConfiguration.ModuleConfiguration.class).getDeclaredConstructor().newInstance());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            Plugin.getPlugin().getConfigManager().saveJson(features, Plugin.getPlugin().getPluginDataFolder().resolve("features.json").toFile());
+        }
+        if (features.modules.containsKey(module.getName())) {
+            module.moduleConfiguration = features.modules.get(module.getName());
+        }*/
+
+        // Setup db
+        /*try {
+            boolean result;
+            if (Plugin.getPlugin().getDb().isConnected())
+                result = module.setupDatabase();
+        }
+        catch (Exception e) {
+            e.printStackTrace();    // TODO: REMOVE
+        }*/
+
 
         if (module instanceof ASynchronizedDataModule)
             activeDataModules.add((ASynchronizedDataModule) module); // TODO: Add scheduler to dispatch event

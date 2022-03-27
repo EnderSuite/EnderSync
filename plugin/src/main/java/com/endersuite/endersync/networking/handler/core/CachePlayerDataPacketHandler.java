@@ -16,7 +16,7 @@ public class CachePlayerDataPacketHandler {
     private final static EnderSyncAPI api = EnderSyncAPI.getInstance();
 
     public static void handle(CachePlayerDataPacket packet) {
-        api.cachePlayerData(UUID.fromString(packet.getPlayerUUID()), packet.getPlayerData());
+        //api.cachePlayerData(UUID.fromString(packet.getPlayerUUID()), packet.getPlayerData());
     }
 
 }

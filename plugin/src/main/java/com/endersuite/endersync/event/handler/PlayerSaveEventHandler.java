@@ -16,10 +16,10 @@ public class PlayerSaveEventHandler {
     public static void onPlayerSaveEvent(PlayerSaveEvent event) {
         new StrFmt("{prefix} Handling " + event).setLevel(Level.DEBUG).toLog();
 
-        if (event.getSaveModules() == null)
+        /*if (event.getSaveModules() == null)
             EnderSyncAPI.getInstance().savePlayerModules(event.getPlayer());
         else
-            EnderSyncAPI.getInstance().savePlayerModules(event.getPlayer(), event.getSaveModules());
+            EnderSyncAPI.getInstance().savePlayerModules(event.getPlayer(), event.getSaveModules());*/
 
     }
 

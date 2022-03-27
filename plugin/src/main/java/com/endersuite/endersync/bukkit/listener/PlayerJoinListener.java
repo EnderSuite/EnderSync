@@ -1,21 +1,12 @@
 package com.endersuite.endersync.bukkit.listener;
 
 import com.endersuite.endersync.Plugin;
+import com.endersuite.endersync.database.models.Player;
 import com.endersuite.endersync.event.core.PlayerSynchronizeEvent;
-import com.endersuite.endersync.packets.core.player.RequestIsPlayerOnlinePacket;
-import com.endersuite.endersync.packets.core.player.ResponseIsPlayerOnlinePacket;
-import com.endersuite.libcore.strfmt.StrFmt;
-import com.endersuite.packify.exceptions.CompletableTimeoutException;
-import com.endersuite.packify.packets.ACollectablePacket;
-import com.endersuite.packify.transmission.CompletableTransmission;
-import com.endersuite.packify.transmission.Transmission;
 import de.maximilianheidenreich.jeventloop.EventLoop;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import java.time.Duration;
-import java.util.List;
 
 /**
  * TODO: Add docs
@@ -29,6 +20,13 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+
+        //Plugin.getPlugin().getDb()
+        Player pDB = new Player(event.getPlayer().getUniqueId());
+        pDB.name = event.getPlayer().getName();
+        pDB.displayName = event.getPlayer().getDisplayName();
+        Plugin.getPlugin().getDb().insert(pDB);
+
         eventLoop.dispatch(new PlayerSynchronizeEvent(event.getPlayer()));
 
         /*RequestIsPlayerOnlinePacket packet = new RequestIsPlayerOnlinePacket(event.getPlayer().getUniqueId());

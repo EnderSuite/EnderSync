@@ -15,6 +15,18 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>plugin-annotations</artifactId>
+            <version>1.2.3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dieselpoint</groupId>
+            <artifactId>norm</artifactId>
+            <version>0.8.5</version>
+        </dependency>
+
         <!-- JGroup -->
         <dependency>
             <groupId>org.jgroups</groupId>

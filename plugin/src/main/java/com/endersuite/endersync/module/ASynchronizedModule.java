@@ -31,19 +31,16 @@ public abstract class ASynchronizedModule {
     @Setter
     private boolean critical;
 
-    /**
-     * Whether the plugin should treat this modules as a raw module -> Don't perform TODO: impl
-     */
-    @Getter
+    /*@Getter
     @Setter
-    private boolean raw;
-
+    private Class<? extends FeaturesJsonConfiguration.ModuleConfiguration> moduleConfigurationClass;
+    public FeaturesJsonConfiguration.ModuleConfiguration moduleConfiguration;
+*/
 
     // ======================   CONSTRUCTOR
 
     /**
      * Creates a new AbstractSyncModule with a given name.
-     * Note: This is where you should initialize / migrate your db structure!
      *
      * @param name
      *          The name of the module
@@ -51,11 +48,17 @@ public abstract class ASynchronizedModule {
     protected ASynchronizedModule(String name) {
         this.name = name;
         this.critical = false;
-        this.raw = false;
     }
 
 
     // ======================   BUSINESS LOGIC
+
+    /**
+     * Initialized the database table of a given module.
+     *
+     * @return {@code true} if everything succeeded and the plugin can continue | {@code false} if not
+     */
+    public abstract boolean setupDatabase();
 
 
     // ======================   HELPERS
@@ -71,8 +74,12 @@ public abstract class ASynchronizedModule {
      *          The table name
      */
     public String getTableName() {
-        return "esmod_" + this.name;
+        return "mod_" + this.name;
     }
 
+
+    /*public <T> T getModuleConfig(Class<T> clazz) {
+        return clazz.cast(this.moduleConfiguration);
+    }*/
     
 }

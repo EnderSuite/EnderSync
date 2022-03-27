@@ -73,7 +73,18 @@ These are the core features of the plugin.
 
 *Note: Modules can be configured: TODO: TEMPLATING*
 
-- [ ] Compatible with versions 1.8 - 1.16
+- [ ] Compatible with versions 1.8 - 1.18
+  - [ ] 1.8
+  - [ ] 1.9
+  - [ ] 1.10
+  - [ ] 1.11
+  - [ ] 1.12
+  - [ ] 1.13
+  - [ ] 1.14
+  - [ ] 1.15
+  - [ ] 1.16
+  - [ ] 1.17
+  - [ ] 1.18
 - [x] Easy to install & use
 - [ ] Localization (See xxx)
 - [ ] Pleasing visuals & sounds
@@ -109,9 +120,9 @@ These are the core features of the plugin.
 - [ ] Database
   - [ ] Store data inside any SQL database
   - [ ] Migration from MySqlPlayerDatabase plugin
-- [x] Networking
-  - [x] Connect multiple servers (nodes) into a cluster
-  - [x] Data pre-caching (Drastically decreases sync. latency)
+- [ ] Networking
+  - [ ] Connect multiple servers (nodes) into a cluster
+  - [ ] Data pre-caching (Drastically decreases sync. latency)
   
 #### Extensibility
 EnderSync allows 3td. parties to develop `extensions` which can add functionality to the plugin like the synchronization 
